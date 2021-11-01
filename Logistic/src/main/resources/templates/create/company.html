@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
+            integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
+            crossorigin="anonymous"></script>
+</head>
+-
+<body>
+<form class="row g-3 needs-validation" novalidate th:method="POST" th:action="@{/create/company}"
+      th:object="${company}">
+
+    <div class="col-md-4">
+        <label for="validationCustom01" class="form-label">Имя</label>
+        <input type="text" class="form-control" id="validationCustom01" placeholder="Введите имя" required
+               th:field="*{name}"/>
+        <div class="valid-feedback">
+            Все хорошо!
+        </div>
+    </div>
+    <!--            <label for="name">Enter name: </label>-->
+    <!--            <input type="text" th:field="*{name}" id="name"/>-->
+    <!--            <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>-->
+
+    <br>
+    <div class="col-md-4">
+        <label for="validationCustom02" class="form-label">Фамилия</label>
+        <input type="text" class="form-control" id="validationCustom02" placeholder="Введите номер телефона" required
+               th:field="*{phoneNumber}"/>
+        <div class="valid-feedback">
+            Все хорошо!
+        </div>
+    </div>
+    <!--            <label for="phoneNumber">Enter phone number: </label>-->
+    <!--            <input type="tel" th:field="*{phoneNumber}" id="phoneNumber"/>-->
+    <!--            <div style="color: red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age error</div>-->
+
+    <br>
+    <div class="col-md-4">
+        <label for="validationCustomUsername" class="form-label">Введите почту</label>
+        <div class="input-group has-validation">
+            <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend"
+                   required th:field="*{email}">
+            <div class="invalid-feedback">
+                Пожалуйста, введите почту.
+            </div>
+        </div>
+    </div>
+    <!--            <label for="email">Enter email: </label>-->
+    <!--            <input type="email" th:field="*{email}" id="email"/>-->
+    <!--            <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>-->
+    <br>
+
+    <div class="col-md-4">
+        <label for="validationCustom03" class="form-label">Введите адрес офиса</label>
+        <input type="text" class="form-control" id="validationCustom03" required placeholder="адрес"
+               th:field="*{addressMainOffice}"/>
+        <div class="invalid-feedback">
+            Укажите действующий адрес.
+        </div>
+    </div>
+    <!--            <label for="addressMainOffice">Enter address of the main office: </label>-->
+    <!--            <input type="text" th:field="*{addressMainOffice}" id="addressMainOffice"/>-->
+    <!--            <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>-->
+    <br>
+
+    <div class="col-md-4">
+        <label for="validationCustom04" class="form-label"> Описание компании</label>
+        <textarea class="form-control" id="validationCustom04" required th:field="*{description}"> </textarea>
+        <div class="invalid-feedback">
+            Введите описание компании
+        </div>
+    </div>
+    <!--            <label for="description">Enter description of the main office: </label>-->
+    <!--            <textarea name="comment" th:field="*{description}" id="description"></textarea>-->
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <input class="btn btn-primary btn-sm" type="submit" value="Создать">
+        </div>
+    </div>
+    <!--            <input type="submit" value="Create!"/>-->
+</form>
+</body>
+</html>
+
