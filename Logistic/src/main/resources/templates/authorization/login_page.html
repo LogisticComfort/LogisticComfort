@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Login page</title>
+
+    <link media="all" rel="stylesheet" th:href="@{/public/css/login_style.css}">
+
+</head>
+    <body>
+
+        <div class="wrapper fadeInDown">
+            <div id="formContent">
+                <!-- Tabs Titles -->
+                <h2 class="active"> Sign In </h2>
+
+                <!-- Icon -->
+                <div class="fadeIn first">
+                    <img src="/public/img/log_in.png" id="icon" alt="User Icon" />
+                </div>
+
+                <div th:if="${param.error}">
+                    Неверное имя пользователя и пароль.
+                </div>
+                <div th:if="${param.logout}">
+                    Вы вышли из системы.
+                </div>
+
+                <!-- Login Form -->
+                <form th:action="@{/login}" method="post">
+                    <input type="text" id="login" class="fadeIn second" name="username" placeholder="username">
+                    <input type="text" id="password" class="fadeIn third" name="password" placeholder="password">
+                    <input type="submit" class="fadeIn fourth" value="Log In">
+                </form>
+
+                <div id="formFooter">
+                    <a class="underlineHover" href="/registration">Create new Account</a>
+                </div>
+
+            </div>
+        </div>
+
+    </body>
+</html>
