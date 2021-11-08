@@ -24,18 +24,11 @@
 </head>
 <body>
 <ul>
-    <!--            <li><br><a class="btn btn-primary" href="#" role="button">Company</a></li>-->
-    <!--                <a href="#">Company</a></li>-->
-    <!--            <li><br><a class="btn btn-primary" href="#" role="button">Company</a></li>-->
-    <!--            <li><a href="#">Staff</a></li>-->
-    <!--            <li><br><a class="btn btn-primary" href="#" role="button">Company</a></li>-->
-    <!--            <li><a href="#">Storage</a></li>-->
-    <!--            <li><br><a class="btn btn-primary" href="#" role="button">Company</a></li>-->
-    <!--            <li><a href="#">Settings</a></li>-->
+
     <div class="btn-group-vertical">
         <br><a href="#" class="btn btn-primary active" aria-current="page">Company</a>
         <br><a href="#" class="btn btn-primary">Staff</a>
-        <br><a href="#" class="btn btn-primary">Storage</a>
+        <br><a href="create/product" class="btn btn-primary">Доб. продукции ТЕСТ!!!</a>
         <br><a href="#" class="btn btn-primary">Settings</a>
     </div>
 </ul>
@@ -64,12 +57,7 @@
         <td><p style="width: 400px; height: auto" th:text="${company.getDescription()}"></p></td>
     </tr>
 </table>
-<!--        <p th:text="${company.getId()}">VALUE</p>-->
-<!--        <p th:text="${company.getName()}">VALUE</p>-->
-<!--        <p th:text="${company.getPhoneNumber()}">VALUE</p>-->
-<!--        <p th:text="${company.getEmail()}">VALUE</p>-->
-<!--        <p th:text="${company.getAddressMainOffice()}">VALUE</p>-->
-<!--        <p th:text="${company.getDescription()}"></p>-->
+
 <br>
 <a class="btn btn-lg btn-primary" href="create/warehouse" role="button">Добавление нового склада</a>
 

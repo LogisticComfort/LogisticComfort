@@ -10,6 +10,7 @@ import com.logisticcomfort.repos.CompanyRepo;
 import com.logisticcomfort.repos.ProductRepo;
 import com.logisticcomfort.repos.UserRepo;
 import com.logisticcomfort.repos.WarehouseRepo;
+import com.logisticcomfort.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.util.HashSet;
+import java.util.List;
 
 @Controller
 @RequestMapping("/create")
@@ -30,13 +32,21 @@ public class createController {
     private final CompanyRepo companyRepo;
     private final UserRepo userRepo;
     private final WarehouseRepo warehouseRepo;
-    private final ProductRepo productRepo;
+    private final ProductService productService;
+    private final ProductService productRepo;
+
     @Autowired
-    public createController(CompanyRepo companyRepo, UserRepo userRepo, WarehouseRepo warehouseRepo, ProductRepo productRepo) {
+    public createController(CompanyRepo companyRepo,
+                            UserRepo userRepo,
+                            WarehouseRepo warehouseRepo,
+                            ProductRepo productRepo,
+                            ProductService productService,
+                            ProductService productRepo1) {
         this.companyRepo = companyRepo;
         this.userRepo = userRepo;
         this.warehouseRepo = warehouseRepo;
-        this.productRepo = productRepo;
+        this.productService = productService;
+        this.productRepo = productRepo1;
     }
 
     @GetMapping("/company")
@@ -91,6 +101,7 @@ public class createController {
         return "redirect:/";
     }
 
+
     @GetMapping("/product")
     public String createProduct(Model model){
         model.addAttribute("product", new Product());
@@ -105,9 +116,20 @@ public class createController {
 
         product.setWarehouse(warehouse);
 
-        warehouseRepo.save(warehouse);
-        productRepo.save(product);
-        return "redirect:/";
+//        warehouseRepo.save(warehouse);
+
+        productService.saveProduct(product);
+        if (product.getVendorCode() == new Product().getVendorCode()) {
+
+        }
+        return "redirect:/create/productShow";
+    }
+
+    @GetMapping("/productShow")
+    public String showAll(Model model) {
+        List<Product> product = productRepo.findAll();
+        model.addAttribute("prod", product);
+        return "/productShow";
     }
 
 }

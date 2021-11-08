@@ -15,8 +15,6 @@ public class Warehouse {
     private String phoneNumber;
     private String addressWarehouse;
 
-//    private Product product;
-
     @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private Company comp;
 
@@ -53,18 +51,6 @@ public class Warehouse {
         this.addressWarehouse = addressWarehouse;
     }
 
-//    public Set<Warehouse> getAuthor() {
-//        return warehouse;
-//    }
-//
-//    public void setAuthor(Set<Warehouse> author) {
-//        this.warehouse = author;
-//    }
-//
-//    public void addAuthor(Warehouse author) {
-//        this.warehouse.add(author);
-//    }
-//
     public Company getComp() {
         return comp;
     }

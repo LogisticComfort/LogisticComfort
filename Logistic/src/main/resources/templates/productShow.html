@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>ProductList</title>
+</head>
+
+<body>
+<div th:each="temp : ${prod}">
+    <table>
+        <tr>
+            <th>idProduct</th>
+            <th>Наименование товара</th>
+            <th>Колличество</th>
+            <th>Артикул</th>
+        </tr>
+        <tr>
+            <td> <a style="width: 100px"  th:text="${temp.getIdProduct()}"></a> </td>
+            <td> <a style="width: 200px" th:text="${temp.getName()}"></a> </td>
+            <td> <a style="width: 100px" th:text="${temp.getAmount()}"></a> </td>
+            <td> <a style="width: 100px" th:text="${temp.getVendorCode()}"></a> </td>
+        </tr>
+    </table>
+</div>
+<a class="btn btn-lg btn-primary" href="product" role="button">добавить товар</a>
+</body>
+</html>

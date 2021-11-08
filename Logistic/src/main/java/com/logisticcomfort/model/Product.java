@@ -9,7 +9,7 @@ public class Product {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long idProduct;
 
     private String name;
 
@@ -17,15 +17,26 @@ public class Product {
 
     private int vendorCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Warehouse warehouse;
-
-    public Long getId() {
-        return id;
+    public Product() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Product(Long idProduct, String name, int amount, int vendorCode, Warehouse ware) {
+        this.idProduct = idProduct;
+        this.name = name;
+        this.amount = amount;
+        this.vendorCode = vendorCode;
+        this.ware = ware;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Warehouse ware;
+
+    public Long getIdProduct() {
+        return idProduct;
+    }
+
+    public void setIdProduct(Long id) {
+        this.idProduct = id;
     }
 
     public String getName() {
@@ -53,10 +64,21 @@ public class Product {
     }
 
     public void setWarehouse(Warehouse warehouse) {
-        this.warehouse = warehouse;
+        this.ware = warehouse;
     }
     public Warehouse getWarehouse() {
-        return warehouse;
+        return ware;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "idProduct=" + idProduct +
+                ", name='" + name + '\'' +
+                ", amount=" + amount +
+                ", vendorCode=" + vendorCode +
+                ", warehouse=" + ware +
+                '}';
     }
 
 }

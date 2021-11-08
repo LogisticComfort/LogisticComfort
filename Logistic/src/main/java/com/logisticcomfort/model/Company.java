@@ -1,6 +1,7 @@
 package com.logisticcomfort.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.Set;
 
 @Entity
@@ -22,13 +23,14 @@ public class Company {
     @OneToMany(mappedBy="comp", fetch = FetchType.LAZY)
     private Set<Warehouse> warehouses;
 
-    @Column(name = "phoneNumber")
+    @Column()
     private String phoneNumber;
 //    @NotBlank(message = "Обязательное поле, введите почту")
     @Column(name = "email")
+    @Email
     private String email;
 //    @NotBlank(message = "Обязательное поле, введите адрес")
-    @Column(name = "addressMainOffice")
+    @Column()
     private String addressMainOffice;
 //    @NotBlank(message = "Обязательное поле, введите описание компании")
     @Column(name = "description")
