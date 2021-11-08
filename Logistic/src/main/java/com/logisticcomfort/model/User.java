@@ -1,24 +1,34 @@
 package com.logisticcomfort.model;
 
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Null;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
 
 @Entity
-@Table(name = "usr")
+@Table(name = "Users")
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotEmpty(message = "Username should not be empty")
+    @Size(min = 2, max = 30, message = "Username should be between 2 and 30 characters")
     private String username;
 
+    @NotEmpty(message = "Password should not be empty")
+    @Size(min = 3, max = 30, message = "Password be between 3 and 30 characters")
     private String password;
+
     private boolean active;
+
+    @Email(message = "Email should be valid")
     private String email;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
@@ -27,7 +37,6 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "COMPANY_ID", nullable = true)
     private Company company;
 
 

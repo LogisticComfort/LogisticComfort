@@ -2,38 +2,40 @@ package com.logisticcomfort.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
-@Table(name = "comp")
+@Table(name = "company")
 public class Company {
 
     @Id
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @NotEmpty(message = "Company name should not be empty")
+    @Size(min = 2, max = 30, message = "Company name should be between 2 and 30 characters")
     private String name;
 
-//    , mappedBy="company"
-//    @JoinColumn(name = "company")
     @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
     private Set<User> author;
 
     @OneToMany(mappedBy="comp", fetch = FetchType.LAZY)
     private Set<Warehouse> warehouses;
 
-    @Column()
+    @NotEmpty(message = "Phone number should not be empty")
+    @Size(min = 2, max = 30, message = "Phone number should be between 2 and 30 characters")
     private String phoneNumber;
-//    @NotBlank(message = "Обязательное поле, введите почту")
-    @Column(name = "email")
-    @Email
+
+    @Email(message = "Email should be valid")
     private String email;
-//    @NotBlank(message = "Обязательное поле, введите адрес")
-    @Column()
+
+    @NotEmpty(message = "Address should not be empty")
+    @Size(min = 2, max = 50, message = "Address should be between 2 and 50 characters")
     private String addressMainOffice;
-//    @NotBlank(message = "Обязательное поле, введите описание компании")
-    @Column(name = "description")
+
+    @NotEmpty(message = "Description should not be empty")
+    @Size(min = 2, max = 200, message = "Description should be between 2 and 200 characters")
     private String description;
 
 
