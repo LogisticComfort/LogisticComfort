@@ -32,7 +32,7 @@ public class registryController {
 
     @GetMapping("/registration")
     public String registration(Model model) {
-        return "registration";
+        return "authorization/registration_page";
     }
 
     @PostMapping("/registration")
@@ -40,7 +40,7 @@ public class registryController {
         User userFromDb = userRepo.findByUsername(user.getUsername());
 
         if (userFromDb != null) {
-            return "registration";
+            return "authorization/registration_page";
         }
 
 
