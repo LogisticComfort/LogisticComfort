@@ -1,12 +1,10 @@
 package com.logisticcomfort.controllers;
 
 import com.logisticcomfort.model.Company;
-//import com.logisticcomfort.model.Product;
 import com.logisticcomfort.model.Product;
 import com.logisticcomfort.model.User;
 import com.logisticcomfort.model.Warehouse;
 import com.logisticcomfort.repos.CompanyRepo;
-//import com.logisticcomfort.repos.ProductRepo;
 import com.logisticcomfort.repos.ProductRepo;
 import com.logisticcomfort.repos.UserRepo;
 import com.logisticcomfort.repos.WarehouseRepo;
@@ -50,7 +48,10 @@ public class createController {
     }
 
     @GetMapping("/company")
-    public String createCompany(Model model){
+    public String createCompany(Model model,
+                                @AuthenticationPrincipal User user){
+        if (user.getCompany() != null)
+            return "redirect:/";
         model.addAttribute("company", new Company());
         return "create/company";
     }
@@ -60,8 +61,8 @@ public class createController {
                          BindingResult bindingResult,
                          @AuthenticationPrincipal User user){
 
-//        if(bindingResult.hasErrors())
-//            return "create/company";
+        if(bindingResult.hasErrors())
+            return "create/company";
 
         var set = new HashSet<User>();
         set.add(user);

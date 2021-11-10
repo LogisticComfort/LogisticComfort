@@ -1,9 +1,7 @@
 package com.logisticcomfort.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Set;
 
 @Entity
@@ -24,9 +22,11 @@ public class Company {
     private Set<Warehouse> warehouses;
 
     @NotEmpty(message = "Phone number should not be empty")
-    @Size(min = 2, max = 30, message = "Phone number should be between 2 and 30 characters")
+    @Size(min = 2, max = 21, message = "Phone number should be between 2 and 30 characters")
+//    @Pattern(regexp="(^$|[0-9]{10})", message = "Phone number should be between 2 and 30 characters")
     private String phoneNumber;
 
+    @NotEmpty(message = "Email should not be empty")
     @Email(message = "Email should be valid")
     private String email;
 
