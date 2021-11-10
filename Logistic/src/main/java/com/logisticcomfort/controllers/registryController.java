@@ -66,7 +66,7 @@ public class registryController {
             return "redirect:/create/company";
 
         model.addAttribute("company", companyRepo.findById((long)user.getCompany().getId()));
-        return "main";
+        return "index";
     }
 }
 
