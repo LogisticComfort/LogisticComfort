@@ -5,6 +5,7 @@ import com.logisticcomfort.model.User;
 import com.logisticcomfort.repos.CompanyRepo;
 import com.logisticcomfort.repos.UserRepo;
 import com.logisticcomfort.repos.WarehouseRepo;
+import com.logisticcomfort.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -26,12 +27,16 @@ public class registryController {
 
     private final WarehouseRepo warehouseRepo;
 
+    private final UserService userService;
+
     @Autowired
-    public registryController(UserRepo userRepo, CompanyRepo companyRepo, WarehouseRepo warehouseRepo) {
+    public registryController(UserRepo userRepo, CompanyRepo companyRepo, WarehouseRepo warehouseRepo, UserService userService) {
         this.userRepo = userRepo;
         this.companyRepo = companyRepo;
         this.warehouseRepo = warehouseRepo;
+        this.userService = userService;
     }
+
 
     @GetMapping("/registration")
     public String registration(Model model) {
@@ -65,7 +70,7 @@ public class registryController {
         if(user.getCompany() == null)
             return "redirect:/create/company";
 
-        model.addAttribute("company", companyRepo.findById((long)user.getCompany().getId()));
+        model.addAttribute("company", userService.findCompanyByUser(user));
         return "index";
     }
 }

@@ -15,7 +15,7 @@ import java.util.Set;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @NotEmpty(message = "Username should not be empty")
@@ -36,7 +36,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private Company company;
 
 

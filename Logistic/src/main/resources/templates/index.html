@@ -10,66 +10,66 @@
 </head>
   <body>
 
-    <!-- partial:index.partial.html -->
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#resNav">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a href="/" class="navbar-brand" th:text="'Компания:  ' + ${company.getName()}">Company Logo</a>
-      </div>
-      <div class="collapse navbar-collapse" id="resNav">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="/">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Services</a></li>
-          <li><a href="#">Team</a></li>
-          <li><a href="#">Contact</a></li>
-          <li>
-            <form th:action="@{/logout}" method="post">
-              <button type="submit" class="btn btn-lg btn-primary">Выход</button>
-            </form>
-          </li>
-        </ul>
-      </div>
-    </nav>  <!-- End of Navigation Bar -->
+      <!-- partial:index.partial.html -->
+      <!-- Navigation Bar -->
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#resNav">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="/" class="navbar-brand" th:text="'Компания:  ' + ${company.getName()}">Company Logo</a>
+        </div>
+        <div class="collapse navbar-collapse" id="resNav">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="/warehouses">Склады</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+              <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-lg btn-primary">Выход</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </nav>  <!-- End of Navigation Bar -->
 
-    <!-- Jumbotron -->
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="jumbotron">
-            <h1>Информация о компании</h1>
-            <br>
-            <p class="lead">
-              <table style="border-collapse: collapse">
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Телефон</th>
-                  <th>Почта</th>
-                  <th>Адрес офиса</th>
-                  <th>Описание</th>
-                </tr>
-                <tr>
-                  <td><p style="width: 50px"  th:text="${company.getId()}">VALUE</p></td>
-                  <td><p style="width: 100px" th:text="${company.getName()}">VALUE</p></td>
-                  <td><p style="width: 150px" th:text="${company.getPhoneNumber()}">VALUE</p></td>
-                  <td><p style="width: 150px" th:text="${company.getEmail()}">VALUE</p></td>
-                  <td><p style="width: 250px; height: auto" th:text="${company.getAddressMainOffice()}">VALUE</p></td>
-                  <td><p style="width: 400px; height: auto" th:text="${company.getDescription()}"></p></td>
-                </tr>
-              </table>
-            </p>
-<!--            <p class="lead">Some simple text so you can see how awesome i am.</p>-->
-<!--            <button type="btn" class="btn btn-primary">Click me!</button>-->
+      <!-- Jumbotron -->
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="jumbotron">
+              <h1>Информация о компании</h1>
+              <br>
+              <p class="lead">
+                <table style="border-collapse: collapse">
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Телефон</th>
+                    <th>Почта</th>
+                    <th>Адрес офиса</th>
+                    <th>Описание</th>
+                  </tr>
+                  <tr>
+                    <td><p style="width: 50px"  th:text="${company.getId()}">VALUE</p></td>
+                    <td><p style="width: 100px" th:text="${company.getName()}">VALUE</p></td>
+                    <td><p style="width: 150px" th:text="${company.getPhoneNumber()}">VALUE</p></td>
+                    <td><p style="width: 150px" th:text="${company.getEmail()}">VALUE</p></td>
+                    <td><p style="width: 250px; height: auto" th:text="${company.getAddressMainOffice()}">VALUE</p></td>
+                    <td><p style="width: 400px; height: auto" th:text="${company.getDescription()}"></p></td>
+                  </tr>
+                </table>
+              </p>
+  <!--            <p class="lead">Some simple text so you can see how awesome i am.</p>-->
+  <!--            <button type="btn" class="btn btn-primary">Click me!</button>-->
+            </div>
           </div>
         </div>
-      </div>
-    </div>  <!-- End of Jumbotron -->
+      </div>  <!-- End of Jumbotron -->
 
 <!--    &lt;!&ndash; Simple Article &ndash;&gt;-->
 <!--    <div class="container">-->
@@ -85,9 +85,9 @@
 <!--    </div>  &lt;!&ndash; End of Simple Article &ndash;&gt;-->
 
 <!-- partial -->
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
-    <script  th:src="@{/public/js/script.js}"></script>
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+      <script  th:src="@{/public/js/script.js}"></script>
 
   </body>
 </html>
