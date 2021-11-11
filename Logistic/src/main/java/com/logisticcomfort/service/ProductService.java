@@ -1,6 +1,7 @@
 package com.logisticcomfort.service;
 
 import com.logisticcomfort.model.Product;
+import com.logisticcomfort.model.Warehouse;
 import com.logisticcomfort.repos.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProductService {
@@ -17,6 +19,10 @@ public class ProductService {
     @Autowired
     public ProductService(ProductRepo productRepo) {
         this.productRepo = productRepo;
+    }
+
+    public Set<Product> findAllProductsByWarehouse(Warehouse warehouse){
+        return productRepo.findAllByWarehouse(warehouse);
     }
 
     public List<Product> findAll() {

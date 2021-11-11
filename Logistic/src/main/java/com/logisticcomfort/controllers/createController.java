@@ -1,14 +1,8 @@
 package com.logisticcomfort.controllers;
 
-import com.logisticcomfort.model.Company;
-import com.logisticcomfort.model.Product;
-import com.logisticcomfort.model.User;
-import com.logisticcomfort.model.Warehouse;
-import com.logisticcomfort.repos.CompanyRepo;
-import com.logisticcomfort.repos.ProductRepo;
-import com.logisticcomfort.repos.UserRepo;
-import com.logisticcomfort.repos.WarehouseRepo;
-import com.logisticcomfort.service.ProductService;
+import com.logisticcomfort.model.*;
+import com.logisticcomfort.repos.*;
+import com.logisticcomfort.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -32,19 +26,19 @@ public class createController {
     private final WarehouseRepo warehouseRepo;
     private final ProductService productService;
     private final ProductService productRepo;
+    private UserService userService;
 
     @Autowired
     public createController(CompanyRepo companyRepo,
                             UserRepo userRepo,
                             WarehouseRepo warehouseRepo,
-                            ProductRepo productRepo,
-                            ProductService productService,
-                            ProductService productRepo1) {
+                            ProductService productService, ProductService productRepo, UserService userService) {
         this.companyRepo = companyRepo;
         this.userRepo = userRepo;
         this.warehouseRepo = warehouseRepo;
         this.productService = productService;
-        this.productRepo = productRepo1;
+        this.productRepo = productRepo;
+        this.userService = userService;
     }
 
     @GetMapping("/company")
@@ -87,19 +81,19 @@ public class createController {
                              BindingResult bindingResult,
                              @AuthenticationPrincipal User user){
 
-        var comp = companyRepo.findById((long)user.getCompany().getId());
+        if (bindingResult.hasErrors())
+            return "create/warehouse";
 
-        var set = new HashSet<Warehouse>();
-        set.add(warehouse);
-        comp.setWarehouses(set);
+        var company = userService.findCompanyByUser(user);
+        company.addAWarehouse(warehouse);
 
-        warehouse.setComp(comp);
+        warehouse.setComp(company);
 
         warehouseRepo.save(warehouse);
 
-        companyRepo.save(comp);
+        companyRepo.save(company);
 
-        return "redirect:/";
+        return "redirect:/warehouses";
     }
 
 

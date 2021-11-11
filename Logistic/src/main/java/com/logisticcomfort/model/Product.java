@@ -17,6 +17,9 @@ public class Product {
 
     private int vendorCode;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Warehouse warehouse;
+
     public Product() {
     }
 
@@ -25,11 +28,8 @@ public class Product {
         this.name = name;
         this.amount = amount;
         this.vendorCode = vendorCode;
-        this.ware = ware;
+        this.warehouse = ware;
     }
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Warehouse ware;
 
     public Long getIdProduct() {
         return idProduct;
@@ -64,10 +64,10 @@ public class Product {
     }
 
     public void setWarehouse(Warehouse warehouse) {
-        this.ware = warehouse;
+        this.warehouse = warehouse;
     }
     public Warehouse getWarehouse() {
-        return ware;
+        return warehouse;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", amount=" + amount +
                 ", vendorCode=" + vendorCode +
-                ", warehouse=" + ware +
+                ", warehouse=" + warehouse +
                 '}';
     }
 

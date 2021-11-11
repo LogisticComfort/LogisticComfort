@@ -60,15 +60,17 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Телефон</th>
+                        <th>Email</th>
                         <th>Адрес офиса</th>
                     </tr>
                     <div th:each="warehouse, iter : ${warehouses} ">
 
                         <tr>
                             <td><p style="width: 50px"  th:text="${iter.index}">VALUE</p></td>
-                            <td><p style="width: 100px" th:text="${warehouse.getWarehouseName()}">VALUE</p></td>
+                            <td><p style="width: 100px" th:text="${warehouse.getName()}">VALUE</p></td>
                             <td><p style="width: 150px" th:text="${warehouse.getPhoneNumber()}">VALUE</p></td>
-                            <td><p style="width: 150px" th:text="${warehouse.getAddressWarehouse()}">VALUE</p></td>
+                            <td><p style="width: 150px" th:text="${warehouse.getEmail()}">VALUE</p></td>
+                            <td><p style="width: 150px" th:text="${warehouse.getAddress()}">VALUE</p></td>
                             <td><a th:href="@{/warehouses/{id}(id=${warehouse.getId()})}">
                                 Посмотреть информацию / изменить данные
                             </a></td>

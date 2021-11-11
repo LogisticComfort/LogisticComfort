@@ -18,7 +18,7 @@ public class Company {
     @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
     private Set<User> author;
 
-    @OneToMany(mappedBy="comp", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
     private Set<Warehouse> warehouses;
 
     @NotEmpty(message = "Phone number should not be empty")

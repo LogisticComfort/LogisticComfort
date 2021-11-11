@@ -36,6 +36,6 @@ public class UserService implements UserDetailsService {
     }
 
     public Set<Warehouse> findAllWarehousesByUser(User user){
-        return warehouseRepo.findAllByComp(findCompanyByUser(user));
+        return warehouseRepo.findAllByCompany(findCompanyByUser(user));
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
     <title>ProductList</title>
@@ -11,7 +12,7 @@
         <tr>
             <th>idProduct</th>
             <th>Наименование товара</th>
-            <th>Колличество</th>
+            <th>Количество</th>
             <th>Артикул</th>
         </tr>
         <tr>
@@ -22,6 +23,6 @@
         </tr>
     </table>
 </div>
-<a class="btn btn-lg btn-primary" href="product" role="button">добавить товар</a>
+<a class="btn btn-lg btn-primary" href="/create/product" role="button">добавить товар</a>
 </body>
 </html>
