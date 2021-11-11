@@ -25,17 +25,6 @@ public class ProductService {
         return productRepo.findAllByWarehouse(warehouse);
     }
 
-    public List<Product> findAll() {
-        var it = productRepo.findAll();
-
-        var products = new ArrayList<Product>();
-        for (Product e : it) {
-            products.add(e);
-        }
-
-        return products;
-    }
-
     public Product findById(long id) {
         return productRepo.findById(id).orElse(null);
     }
@@ -49,20 +38,16 @@ public class ProductService {
         productRepo.deleteById(idProduct);
     }
 
-    public Product saveProduct(Product product) {
-        List<Product> prodTmp;
-        prodTmp = findAll();
+    public void saveProduct(Product product, Warehouse warehouse) {
+        var prodTmp = productRepo.findAllByWarehouse(warehouse);
         for (Product prod : prodTmp) {
             if (prod.getVendorCode() == product.getVendorCode()) {
-                long idDell = prod.getIdProduct();
-                int count = product.getAmount() + prod.getAmount();
-                product.setAmount(count);
-                deleteById(idDell);
-                productRepo.save(product);
+                prod.setAmount(prod.getAmount() + product.getAmount());
+                productRepo.save(prod);
+                return;
             }
         }
-        return productRepo.save(product);
+        product.setWarehouse(warehouse);
+        productRepo.save(product);
     }
-
-
 }

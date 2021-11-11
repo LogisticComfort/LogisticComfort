@@ -3,26 +3,114 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <meta charset="UTF-8">
-    <title>ProductList</title>
-</head>
+    <title>Product List</title>
 
-<body>
-<div th:each="temp : ${prod}">
-    <table>
-        <tr>
-            <th>idProduct</th>
-            <th>Наименование товара</th>
-            <th>Количество</th>
-            <th>Артикул</th>
-        </tr>
-        <tr>
-            <td> <a style="width: 100px"  th:text="${temp.getIdProduct()}"></a> </td>
-            <td> <a style="width: 200px" th:text="${temp.getName()}"></a> </td>
-            <td> <a style="width: 100px" th:text="${temp.getAmount()}"></a> </td>
-            <td> <a style="width: 100px" th:text="${temp.getVendorCode()}"></a> </td>
-        </tr>
-    </table>
-</div>
-<a class="btn btn-lg btn-primary" href="/create/product" role="button">добавить товар</a>
-</body>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+    <link rel="stylesheet" th:href="@{/public/css/nav_bar.css}">
+</head>
+    <body>
+
+        <!-- partial:index.partial.html -->
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#resNav">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand" th:text="'Компания:  ' + ${company.getName()}">Company Logo</a>
+            </div>
+            <div class="collapse navbar-collapse" id="resNav">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="/warehouses">Склады</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li>
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="btn btn-lg btn-primary">Выход</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>  <!-- End of Navigation Bar -->
+
+        <!-- Jumbotron -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="jumbotron">
+                        <h1 th:text="'Товары на складе: ' + ${warehouse.getName()}"></h1>
+                    </div>
+                </div>
+            </div>
+        </div>  <!-- End of Jumbotron -->
+
+        <!-- Simple Article -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <table style="border-collapse: collapse">
+                        <tr>
+                            <th>idProduct</th>
+                            <th>Наименование товара</th>
+                            <th>Количество</th>
+                            <th>Артикул</th>
+                        </tr>
+                        <div th:each="product, iter : ${products} ">
+
+                            <tr>
+                                <td><p style="width: 50px"  th:text="${iter.index + 1}">VALUE</p></td>
+                                <td><p style="width: 100px" th:text="${product.getName()}">VALUE</p></td>
+                                <td><p style="width: 150px" th:text="${product.getAmount()}">VALUE</p></td>
+                                <td><p style="width: 150px" th:text="${product.getVendorCode()}">VALUE</p></td>
+<!--                                <td><a th:href="@{/warehouses/{id}(id=${warehouse.getId()})}">-->
+<!--                                    Посмотреть информацию / изменить данные-->
+<!--                                </a></td>-->
+
+                            </tr>
+
+                        </div>
+                    </table>
+                    <br>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <form method="post" th:action="@{/create/product/{id}(id=${warehouse.getId()})}" th:object="${product}">
+                        <h3>Create your Warehouse</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" name="txtName" class="form-control" placeholder="Name *" value="" th:field="*{name}"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="text" name="txtName" class="form-control" placeholder="Amount *" value="" th:field="*{amount}"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="text" name="txtName" class="form-control" placeholder="Vendor Code *" value="" th:field="*{vendorCode}"/>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="submit" name="btnSubmit" class="btnContact" value="Добавить товар" />
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>  <!-- End of Simple Article -->
+
+        <!-- partial -->
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+        <script  th:src="@{/public/js/script.js}"></script>
+
+    </body>
 </html>

@@ -4,13 +4,14 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
-@Table(name = "Ware")
+@Table(name = "warehouses")
 public class Warehouse {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @NotEmpty(message = "Warehouse's name should not be empty")
@@ -31,6 +32,29 @@ public class Warehouse {
 
     @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private Company company;
+
+    @OneToMany(mappedBy="warehouse", fetch = FetchType.LAZY)
+    private Set<Product> products;
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
+
+    public void addProducts(Product product) {
+        products.add(product);
+    }
 
     public String getEmail() {
         return email;

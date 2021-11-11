@@ -38,10 +38,13 @@ public class warehouseController {
     }
 
     @GetMapping("/{id}")
-    public String Show (@PathVariable("id") int id, Model model){
+    public String Show (@PathVariable("id") int id, Model model, @AuthenticationPrincipal User user){
         var warehouse = warehouseRepo.findById(id);
         var products = productService.findAllProductsByWarehouse(warehouse);
         model.addAttribute("products", products);
+        model.addAttribute("warehouse", warehouse);
+        model.addAttribute("company", userService.findCompanyByUser(user));
+        model.addAttribute("product", new Product());
 
         return "/productShow";
     }

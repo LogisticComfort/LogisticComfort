@@ -8,10 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashSet;
@@ -97,34 +94,24 @@ public class createController {
     }
 
 
-    @GetMapping("/product")
-    public String createProduct(Model model){
-        model.addAttribute("product", new Product());
-        return "create/product";
-    }
+//    @GetMapping("/product")
+//    public String createProduct(Model model){
+//        model.addAttribute("product", new Product());
+//        return "create/product";
+//    }
 
-    @PostMapping("/product")
-    public String CreateProduct(@ModelAttribute("product") @Valid Product product,
-                             BindingResult bindingResult,
-                             @AuthenticationPrincipal User user) {
-        var warehouse = warehouseRepo.findById((long)user.getCompany().getId());
+    @PostMapping("/product/{id}")
+    public String CreateProduct(@PathVariable("id") int id, @ModelAttribute("product") @Valid Product product,
+                                BindingResult bindingResult,
+                                @AuthenticationPrincipal User user) {
+        var warehouse = warehouseRepo.findById(id);
 
         product.setWarehouse(warehouse);
+        warehouse.addProducts(product);
 
-//        warehouseRepo.save(warehouse);
+        warehouseRepo.save(warehouse);
+        productService.saveProduct(product, warehouse);
 
-        productService.saveProduct(product);
-        if (product.getVendorCode() == new Product().getVendorCode()) {
-
-        }
-        return "redirect:/create/productShow";
+        return "redirect:/warehouses/" + String.valueOf(id);
     }
-
-    @GetMapping("/productShow")
-    public String showAll(Model model) {
-        List<Product> product = productRepo.findAll();
-        model.addAttribute("prod", product);
-        return "/productShow";
-    }
-
 }
