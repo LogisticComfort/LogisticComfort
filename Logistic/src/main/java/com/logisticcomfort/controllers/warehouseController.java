@@ -58,9 +58,7 @@ public class warehouseController {
         return "productShow";
     }
 
-//    @GetMapping("/delete/product/{id}/{warehouseId}")
     @RequestMapping("/delete/product")
-//    public String DeleteProduct(@PathVariable("id") long id, @PathVariable("warehouseId") long warehouseId, @AuthenticationPrincipal User user, Model model){
       public String DeleteProduct(@RequestParam(value = "id", required = false) long id,
                                   @RequestParam(value = "warehouse", required = false) long warehouseId,
                                   @AuthenticationPrincipal User user, Model model){
