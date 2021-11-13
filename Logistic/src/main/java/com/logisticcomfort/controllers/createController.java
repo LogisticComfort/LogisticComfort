@@ -93,13 +93,6 @@ public class createController {
         return "redirect:/warehouses";
     }
 
-
-//    @GetMapping("/product")
-//    public String createProduct(Model model){
-//        model.addAttribute("product", new Product());
-//        return "create/product";
-//    }
-
     @PostMapping("/product/{id}")
     public String CreateProduct(@PathVariable("id") int id, @ModelAttribute("product") @Valid Product product,
                                 BindingResult bindingResult,

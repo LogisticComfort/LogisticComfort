@@ -8,9 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +22,8 @@ public class warehouseController {
     private UserService userService;
     private ProductService productService;
     private WarehouseRepo warehouseRepo;
+
+    private Model modelPublic;
 
     @Autowired
     public warehouseController(UserService userService, ProductService productService, WarehouseRepo warehouseRepo) {
@@ -38,7 +41,7 @@ public class warehouseController {
     }
 
     @GetMapping("/{id}")
-    public String Show (@PathVariable("id") int id, Model model, @AuthenticationPrincipal User user){
+    public String Show (@PathVariable("id") long id, Model model, @AuthenticationPrincipal User user){
         var warehouse = warehouseRepo.findById(id);
         var products = productService.findAllProductsByWarehouse(warehouse);
         model.addAttribute("products", products);
@@ -46,7 +49,29 @@ public class warehouseController {
         model.addAttribute("company", userService.findCompanyByUser(user));
         model.addAttribute("product", new Product());
 
-        return "/productShow";
+        try {
+            model.addAttribute("errorNotNull", modelPublic.getAttribute("errorNotNull"));
+            modelPublic = null;
+        }catch (Exception exception){
+            System.out.println("can not find errorNotNull attribute");
+        }
+        return "productShow";
+    }
+
+//    @GetMapping("/delete/product/{id}/{warehouseId}")
+    @RequestMapping("/delete/product")
+//    public String DeleteProduct(@PathVariable("id") long id, @PathVariable("warehouseId") long warehouseId, @AuthenticationPrincipal User user, Model model){
+      public String DeleteProduct(@RequestParam(value = "id", required = false) long id,
+                                  @RequestParam(value = "warehouse", required = false) long warehouseId,
+                                  @AuthenticationPrincipal User user, Model model){
+        try {
+            productService.deleteProduct(id);
+        } catch (Exception exception){
+            modelPublic = model.addAttribute("errorNotNull", true);
+            System.out.println(exception.getMessage());
+        }
+
+        return "redirect:/warehouses/" + String.valueOf(warehouseId);
     }
 
 

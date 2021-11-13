@@ -50,4 +50,17 @@ public class ProductService {
         product.setWarehouse(warehouse);
         productRepo.save(product);
     }
+
+    public void deleteProduct(long id) throws Exception
+    {
+        var product = findById(id);
+        if(product.getAmount() == 0){
+            product.setWarehouse(null);
+            productRepo.save(product);
+            productRepo.delete(product);
+            return;
+        }
+
+        throw new Exception("Количество продукции не равно 0");
+    }
 }
