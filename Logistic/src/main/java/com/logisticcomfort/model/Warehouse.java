@@ -3,6 +3,7 @@ package com.logisticcomfort.model;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
@@ -20,6 +21,8 @@ public class Warehouse {
 
     @NotEmpty(message = "Phone number should not be empty")
     @Size(min = 2, max = 21, message = "Phone number should be between 2 and 30 characters")
+    @Pattern(regexp = "7-\\d+-\\d+-\\d+-\\d+",
+            message = "введите телефон в формате 7-ххх-ххх-хх-хх")
     private String phoneNumber;
 
     @NotEmpty(message = "Address should not be empty")

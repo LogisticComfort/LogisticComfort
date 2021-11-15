@@ -23,7 +23,8 @@ public class Company {
 
     @NotEmpty(message = "Phone number should not be empty")
     @Size(min = 2, max = 21, message = "Phone number should be between 2 and 30 characters")
-//    @Pattern(regexp="(^$|[0-9]{10})", message = "Phone number should be between 2 and 30 characters")
+    @Pattern(regexp = "7-\\d+-\\d+-\\d+-\\d+",
+            message = "введите телефон в формате 7-ххх-ххх-хх-хх")
     private String phoneNumber;
 
     @NotEmpty(message = "Email should not be empty")
