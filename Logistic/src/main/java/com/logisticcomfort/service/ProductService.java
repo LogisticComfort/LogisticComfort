@@ -1,7 +1,8 @@
 package com.logisticcomfort.service;
 
-import com.logisticcomfort.model.Product;
-import com.logisticcomfort.model.Warehouse;
+import com.logisticcomfort.model.*;
+import com.logisticcomfort.repos.ApplyProductRepo;
+import com.logisticcomfort.repos.CompanyRepo;
 import com.logisticcomfort.repos.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -16,10 +17,14 @@ import java.util.Set;
 public class ProductService {
 
     private final ProductRepo productRepo;
+    private final ApplyProductRepo applyProductRepo;
+    private final CompanyRepo companyRepo;
 
     @Autowired
-    public ProductService(ProductRepo productRepo) {
+    public ProductService(ProductRepo productRepo, ApplyProductRepo applyProductRepo, CompanyRepo companyRepo) {
         this.productRepo = productRepo;
+        this.applyProductRepo = applyProductRepo;
+        this.companyRepo = companyRepo;
     }
 
     public Set<Product> findAllProductsByWarehouse(Warehouse warehouse){
@@ -53,6 +58,10 @@ public class ProductService {
         productRepo.save(product);
     }
 
+    public Set<ApplyProduct> findAllApplyProductsByCompany(Company company){
+        return applyProductRepo.findAllByCompany(company);
+    }
+
     public void deleteProduct(long id) throws Exception
     {
         var product = findById(id);
@@ -64,5 +73,12 @@ public class ProductService {
         }
 
         throw new Exception("Количество продукции не равно 0");
+    }
+
+    public void addProductInApply(Product product, Warehouse warehouse, Company company){
+        var applyProduct = new ApplyProduct(product, warehouse.getId(), warehouse.getName(), null, StatusProduct.EXPECTS, company);
+        applyProductRepo.save(applyProduct);
+        company.addApplyProducts(applyProduct);
+        companyRepo.save(company);
     }
 }

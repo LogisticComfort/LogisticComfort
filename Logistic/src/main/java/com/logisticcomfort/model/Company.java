@@ -21,6 +21,9 @@ public class Company {
     @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
     private Set<Warehouse> warehouses;
 
+    @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
+    private Set<ApplyProduct> applyProducts;
+
     @NotEmpty(message = "Phone number should not be empty")
     @Size(min = 2, max = 21, message = "Phone number should be between 2 and 30 characters")
     @Pattern(regexp = "7-\\d+-\\d+-\\d+-\\d+",
@@ -39,6 +42,19 @@ public class Company {
     @Size(min = 2, max = 200, message = "Description should be between 2 and 200 characters")
     private String description;
 
+
+    public Set<ApplyProduct> getApplyProducts() {
+
+        return applyProducts;
+    }
+
+    public void setApplyProducts(Set<ApplyProduct> applyProducts) {
+        this.applyProducts = applyProducts;
+    }
+
+    public void addApplyProducts(ApplyProduct applyProduct) {
+        this.applyProducts.add(applyProduct);
+    }
 
     public String getEmail() {
         return email;

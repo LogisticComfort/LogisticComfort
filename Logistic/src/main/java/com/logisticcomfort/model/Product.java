@@ -23,8 +23,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long idProduct, String name, int amount, int vendorCode, Warehouse ware) {
-        this.idProduct = idProduct;
+    public Product(String name, int amount, int vendorCode, Warehouse ware) {
         this.name = name;
         this.amount = amount;
         this.vendorCode = vendorCode;
