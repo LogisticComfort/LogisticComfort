@@ -4,6 +4,7 @@ import com.logisticcomfort.model.Product;
 import com.logisticcomfort.model.Warehouse;
 import com.logisticcomfort.repos.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,7 +23,8 @@ public class ProductService {
     }
 
     public Set<Product> findAllProductsByWarehouse(Warehouse warehouse){
-        return productRepo.findAllByWarehouse(warehouse);
+        return productRepo.findAllByWarehouseOrderByVendorCodeAsc(warehouse);
+//        return productRepo.findAllByWarehouse(warehouse);
     }
 
     public Product findById(long id) {
