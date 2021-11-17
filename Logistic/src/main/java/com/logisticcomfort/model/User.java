@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -132,5 +133,11 @@ public class User implements UserDetails {
 
     public void setWarehouse(Warehouse warehouse) {
         this.warehouse = warehouse;
+    }
+
+    public void editRole(Role role){
+        var set = new HashSet<Role>();
+        set.add(role);
+        this.roles = set;
     }
 }

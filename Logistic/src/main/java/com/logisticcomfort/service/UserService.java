@@ -47,4 +47,8 @@ public class UserService implements UserDetailsService {
     public Company getCompany(User user){
         return companyRepo.findById((long)user.getCompany().getId());
     }
+
+    public User findUserById(Long id){
+        return userRepo.findById((long) id);
+    }
 }

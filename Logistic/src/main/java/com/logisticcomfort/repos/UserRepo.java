@@ -8,6 +8,7 @@ import java.util.Set;
 
 public interface UserRepo extends JpaRepository<User, Long> {
     User findByUsername(String username);
+    User findById(long id);
 
     Set<User> findAllByCompanyOrderByIdAsc(Company company);
 

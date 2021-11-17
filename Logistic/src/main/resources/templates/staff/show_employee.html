@@ -42,7 +42,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="jumbotron">
-                        <h1 th:text="'Работник: ' + ${employee.getName()}"></h1>
+                        <h1 th:text="'Работник: ' + ${employee.getUsername()}"></h1>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,6 @@
                 <div class="col-xs-12">
                     <table style="border-collapse: collapse">
                         <tr>
-                            <th>id</th>
                             <th>Имя</th>
                             <th>Пароль</th>
                             <th>Email</th>
@@ -79,10 +78,10 @@
 
             <div class="row">
                 <div class="col-xs-12">
-                    <form method="post" th:action="@{/staff/edit/employee/{id}(id=${employee.getId()})}" th:object="${employee}">
+                    <form method="post" th:action="@{/staff/edit/employee/{id}(id=${employee.getId()})}">
                         <div class="form-group">
                             <label for="roles" class="form-label">Изменить роль</label>
-                            <select name="status" id="roles" th:field="*{roles}">
+                            <select name="status" id="roles">
                                 <option th:each="role : ${T(com.logisticcomfort.model.Role).values()}"
                                         th:value="${role}" th:text="${role}" ></option>
                             </select>

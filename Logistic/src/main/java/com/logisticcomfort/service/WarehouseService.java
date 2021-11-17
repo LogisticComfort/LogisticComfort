@@ -16,12 +16,12 @@ public class WarehouseService {
 
     public Set<Warehouse> findAllWarehousesByCompany(Company company){
         var set = warehouseRepo.findAllByCompany(company);
-        if (set.size() == 0){
-            var warehouse = new Warehouse();
-            warehouse.setId(-1l);
-            warehouse.setName("default");
-            set.add(warehouse);
-        }
+
+        var warehouse = new Warehouse();
+        warehouse.setId(-1l);
+        warehouse.setName("default");
+        set.add(warehouse);
+
 
         return set;
     }
