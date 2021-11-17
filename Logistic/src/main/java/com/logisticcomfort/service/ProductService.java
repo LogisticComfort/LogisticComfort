@@ -62,6 +62,10 @@ public class ProductService {
         return applyProductRepo.findAllByCompany(company);
     }
 
+    public Set<ApplyProduct> findAllByCompanyOrderByIdDesc(Company company){
+        return applyProductRepo.findAllByCompanyOrderByIdDesc(company);
+    }
+
     public void deleteProduct(long id) throws Exception
     {
         var product = findById(id);

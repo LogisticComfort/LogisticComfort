@@ -35,7 +35,8 @@ public class applyProductController {
         var company =  companyRepo.findById((long)user.getCompany().getId());
 
         model.addAttribute("company", company);
-        model.addAttribute("applyProducts", productService.findAllApplyProductsByCompany(company));
+//        model.addAttribute("applyProducts", productService.findAllApplyProductsByCompany(company));
+        model.addAttribute("applyProducts", productService.findAllByCompanyOrderByIdDesc(company));
 
         return "show_apply_products";
     }

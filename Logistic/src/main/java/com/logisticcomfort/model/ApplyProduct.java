@@ -12,9 +12,9 @@ public class ApplyProduct {
 
     private String name;
 
-    private int amountAdd;
+    private Long amountAdd;
 
-    private int vendorCode;
+    private Long vendorCode;
 
     private Long warehousesId;
 
@@ -65,19 +65,19 @@ public class ApplyProduct {
         this.name = name;
     }
 
-    public int getAmountAdd() {
+    public Long getAmountAdd() {
         return amountAdd;
     }
 
-    public void setAmountAdd(int amountAdd) {
+    public void setAmountAdd(Long amountAdd) {
         this.amountAdd = amountAdd;
     }
 
-    public int getVendorCode() {
+    public Long getVendorCode() {
         return vendorCode;
     }
 
-    public void setVendorCode(int vendorCode) {
+    public void setVendorCode(Long vendorCode) {
         this.vendorCode = vendorCode;
     }
 
