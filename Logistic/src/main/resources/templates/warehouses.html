@@ -24,7 +24,7 @@
             <div class="collapse navbar-collapse" id="resNav">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/">Home</a></li>
-                    <li><a href="#">About</a></li>
+                    <li><a href="/staff">Staff</a></li>
                     <li><a href="/apply_products">Apply Products</a></li>
                     <li><a href="/warehouses">Склады</a></li>
                     <li><a href="#">Contact</a></li>
@@ -66,7 +66,7 @@
                     <div th:each="warehouse, iter : ${warehouses} ">
 
                         <tr>
-                            <td><p style="width: 50px"  th:text="${iter.index}">VALUE</p></td>
+                            <td><p style="width: 50px"  th:text="${iter.index + 1}">VALUE</p></td>
                             <td><p style="width: 100px" th:text="${warehouse.getName()}">VALUE</p></td>
                             <td><p style="width: 150px" th:text="${warehouse.getPhoneNumber()}">VALUE</p></td>
                             <td><p style="width: 150px" th:text="${warehouse.getEmail()}">VALUE</p></td>

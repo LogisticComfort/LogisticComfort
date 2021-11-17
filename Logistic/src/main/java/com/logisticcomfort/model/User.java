@@ -39,6 +39,8 @@ public class User implements UserDetails {
     @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private Company company;
 
+    @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    private Warehouse warehouse;
 
     public String getEmail() {
         return email;
@@ -113,11 +115,22 @@ public class User implements UserDetails {
         this.active = active;
     }
 
-    public Set<Role> getRoles() {
+    public Set<Role> getRoles(){
         return roles;
+    }
+    public Role getRole() {
+        return roles.stream().findFirst().get();
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Warehouse getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
     }
 }

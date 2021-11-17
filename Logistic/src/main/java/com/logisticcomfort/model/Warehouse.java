@@ -39,6 +39,9 @@ public class Warehouse {
     @OneToMany(mappedBy="warehouse", fetch = FetchType.LAZY)
     private Set<Product> products;
 
+    @OneToMany(mappedBy="warehouse", fetch = FetchType.LAZY)
+    private Set<User> users;
+
     public Company getCompany() {
         return company;
     }
@@ -105,5 +108,13 @@ public class Warehouse {
 
     public void setComp(Company company) {
         this.company = company;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }

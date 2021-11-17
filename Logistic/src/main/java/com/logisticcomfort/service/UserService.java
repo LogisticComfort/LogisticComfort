@@ -38,4 +38,13 @@ public class UserService implements UserDetailsService {
     public Set<Warehouse> findAllWarehousesByUser(User user){
         return warehouseRepo.findAllByCompany(findCompanyByUser(user));
     }
+
+    public Set<User> findAllByCompanyOrderByIdAsc(User user){
+        var company = companyRepo.findById((long)user.getCompany().getId());
+        return userRepo.findAllByCompanyOrderByIdAsc(company);
+    }
+
+    public Company getCompany(User user){
+        return companyRepo.findById((long)user.getCompany().getId());
+    }
 }

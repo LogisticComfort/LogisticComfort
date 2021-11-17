@@ -1,5 +1,6 @@
 package com.logisticcomfort.service;
 
+import com.logisticcomfort.model.Company;
 import com.logisticcomfort.model.Warehouse;
 import com.logisticcomfort.repos.WarehouseRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,5 +13,17 @@ public class WarehouseService {
 
     @Autowired
     private WarehouseRepo warehouseRepo;
+
+    public Set<Warehouse> findAllWarehousesByCompany(Company company){
+        var set = warehouseRepo.findAllByCompany(company);
+        if (set.size() == 0){
+            var warehouse = new Warehouse();
+            warehouse.setId(-1l);
+            warehouse.setName("default");
+            set.add(warehouse);
+        }
+
+        return set;
+    }
 
 }

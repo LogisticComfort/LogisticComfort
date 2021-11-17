@@ -23,19 +23,24 @@ public class createController {
     private final WarehouseRepo warehouseRepo;
     private final ProductService productService;
     private final ProductService productRepo;
-    private UserService userService;
+    private final UserService userService;
+    private final WarehouseService warehouseService;
 
     @Autowired
     public createController(CompanyRepo companyRepo,
                             UserRepo userRepo,
                             WarehouseRepo warehouseRepo,
-                            ProductService productService, ProductService productRepo, UserService userService) {
+                            ProductService productService,
+                            ProductService productRepo,
+                            UserService userService,
+                            WarehouseService warehouseService) {
         this.companyRepo = companyRepo;
         this.userRepo = userRepo;
         this.warehouseRepo = warehouseRepo;
         this.productService = productService;
         this.productRepo = productRepo;
         this.userService = userService;
+        this.warehouseService = warehouseService;
     }
 
     @GetMapping("/company")
@@ -108,5 +113,27 @@ public class createController {
         productService.addProductInApply(product, warehouse, companyRepo.findById((long)user.getCompany().getId()));
 
         return "redirect:/warehouses/" + String.valueOf(id);
+    }
+
+    @PostMapping("/employee")
+    public String CreateEmployee(@ModelAttribute("employee") @Valid User user,
+                                 BindingResult bindingResult,
+                                 @ModelAttribute("warehouseForEmployee") @Valid Long warehouseId,
+                                 Model model,
+                                 @AuthenticationPrincipal User userAuth){
+
+        if(bindingResult.hasErrors())
+            return "redirect:/staff";
+
+        user.setActive(true);
+        user.setCompany(userService.getCompany(userAuth));
+
+        if(warehouseId != null && warehouseId >= 0){
+            user.setWarehouse(warehouseRepo.findById((long)warehouseId));
+        }
+
+        userRepo.saveAndFlush(user);
+
+        return "redirect:/staff";
     }
 }
