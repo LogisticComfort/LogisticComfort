@@ -112,4 +112,17 @@ public class ApplyProduct {
     public void setCompany(Company company) {
         this.company = company;
     }
+
+    @Override
+    public String toString() {
+        return "ApplyProduct{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", amountAdd=" + amountAdd +
+                ", vendorCode=" + vendorCode +
+                ", warehousesId=" + warehousesId +
+                ", warehouseName='" + warehouseName + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status + '}';
+    }
 }

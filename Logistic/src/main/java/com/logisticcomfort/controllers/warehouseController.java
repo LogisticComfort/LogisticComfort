@@ -4,20 +4,19 @@ import com.logisticcomfort.model.Product;
 import com.logisticcomfort.model.User;
 import com.logisticcomfort.repos.WarehouseRepo;
 import com.logisticcomfort.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/warehouses")
 public class warehouseController {
+
+    private static final Logger LOG_WH_CONTROL = LoggerFactory.getLogger(warehouseController.class.getName());
 
     private UserService userService;
     private ProductService productService;
@@ -27,6 +26,7 @@ public class warehouseController {
 
     @Autowired
     public warehouseController(UserService userService, ProductService productService, WarehouseRepo warehouseRepo) {
+        LOG_WH_CONTROL.info("Autowired warehouseController");
         this.userService = userService;
         this.productService = productService;
         this.warehouseRepo = warehouseRepo;
@@ -36,7 +36,7 @@ public class warehouseController {
     public String warehousesPage(@AuthenticationPrincipal User user, Model model){
         model.addAttribute("warehouses", userService.findAllWarehousesByUser(user));
         model.addAttribute("company", userService.findCompanyByUser(user));
-
+        LOG_WH_CONTROL.info("GetMapping - warehousesPage - model:{}", model);
         return "warehouses";
     }
 
@@ -49,11 +49,14 @@ public class warehouseController {
         model.addAttribute("company", userService.findCompanyByUser(user));
         model.addAttribute("product", new Product());
 
+        LOG_WH_CONTROL.info("GetMapping - Show - model:{}", model);
+
         try {
             model.addAttribute("errorNotNull", modelPublic.getAttribute("errorNotNull"));
             modelPublic = null;
+            LOG_WH_CONTROL.info("modelPublic is: modelPublic:{}", (Object) null);
         }catch (Exception exception){
-            System.out.println("can not find errorNotNull attribute");
+            LOG_WH_CONTROL.warn("can not find errorNotNull attribute", exception);
         }
         return "productShow";
     }
@@ -66,7 +69,8 @@ public class warehouseController {
             productService.deleteProduct(id);
         } catch (Exception exception){
             modelPublic = model.addAttribute("errorNotNull", true);
-            System.out.println(exception.getMessage());
+            LOG_WH_CONTROL.info("RequestMapping - DeleteProduct - modelPublic:{}", modelPublic);
+            LOG_WH_CONTROL.error("DeleteProduct Exception", exception);
         }
 
         return "redirect:/warehouses/" + String.valueOf(warehouseId);

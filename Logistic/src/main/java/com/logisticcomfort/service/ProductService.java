@@ -4,6 +4,8 @@ import com.logisticcomfort.model.*;
 import com.logisticcomfort.repos.ApplyProductRepo;
 import com.logisticcomfort.repos.CompanyRepo;
 import com.logisticcomfort.repos.ProductRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.util.Set;
 @Service
 public class ProductService {
 
+    private static final Logger LOG_PROD_SERVICE = LoggerFactory.getLogger(ProductService.class.getName());
     private final ProductRepo productRepo;
     private final ApplyProductRepo applyProductRepo;
     private final CompanyRepo companyRepo;
@@ -33,6 +36,7 @@ public class ProductService {
     }
 
     public Product findById(long id) {
+        LOG_PROD_SERVICE.debug("findById");
         return productRepo.findById(id).orElse(null);
     }
 
@@ -46,6 +50,7 @@ public class ProductService {
     }
 
     public void saveProduct(Product product, Warehouse warehouse) {
+        LOG_PROD_SERVICE.debug("Before save Product");
         var prodTmp = productRepo.findAllByWarehouse(warehouse);
         for (Product prod : prodTmp) {
             if (prod.getVendorCode() == product.getVendorCode()) {
@@ -56,29 +61,34 @@ public class ProductService {
         }
         product.setWarehouse(warehouse);
         productRepo.save(product);
+        LOG_PROD_SERVICE.debug("After save Product");
     }
 
     public Set<ApplyProduct> findAllApplyProductsByCompany(Company company){
         return applyProductRepo.findAllByCompany(company);
     }
 
-    public void deleteProduct(long id) throws Exception
-    {
-        var product = findById(id);
-        if(product.getAmount() == 0){
-            product.setWarehouse(null);
-            productRepo.save(product);
-            productRepo.delete(product);
-            return;
-        }
+    public void deleteProduct(long id) {
+        try {
+            var product = findById(id);
+            if(product.getAmount() == 0){
+                product.setWarehouse(null);
+                productRepo.save(product);
+                productRepo.delete(product);
+                return;
+            }
 
-        throw new Exception("Количество продукции не равно 0");
+        } catch (Exception e) {
+            LOG_PROD_SERVICE.error("Количество продукции не равно 0", e);
+        }
     }
 
     public void addProductInApply(Product product, Warehouse warehouse, Company company){
         var applyProduct = new ApplyProduct(product, warehouse.getId(), warehouse.getName(), null, StatusProduct.EXPECTS, company);
         applyProductRepo.save(applyProduct);
+        LOG_PROD_SERVICE.info("Apply Product - applyProduct:{}", applyProduct);
         company.addApplyProducts(applyProduct);
         companyRepo.save(company);
+        LOG_PROD_SERVICE.info("Company save - company:{}", company);
     }
 }

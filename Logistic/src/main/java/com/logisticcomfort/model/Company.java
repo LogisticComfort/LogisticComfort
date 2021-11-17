@@ -128,4 +128,14 @@ public class Company {
         this.warehouses.add(warehouse);
     }
 
+    @Override
+    public String toString() {
+        return "Company{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", addressMainOffice='" + addressMainOffice + '\'' +
+                '}';
+    }
 }
