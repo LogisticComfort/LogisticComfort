@@ -99,11 +99,13 @@ public class createController {
                                 @AuthenticationPrincipal User user) {
         var warehouse = warehouseRepo.findById(id);
 
-        product.setWarehouse(warehouse);
-        warehouse.addProducts(product);
+//        product.setWarehouse(warehouse);
+//        warehouse.addProducts(product);
+//
+//        warehouseRepo.save(warehouse);
+//        productService.saveProduct(product, warehouse);
 
-        warehouseRepo.save(warehouse);
-        productService.saveProduct(product, warehouse);
+        productService.addProductInApply(product, warehouse, companyRepo.findById((long)user.getCompany().getId()));
 
         return "redirect:/warehouses/" + String.valueOf(id);
     }

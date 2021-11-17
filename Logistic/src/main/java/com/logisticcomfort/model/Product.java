@@ -13,9 +13,9 @@ public class Product {
 
     private String name;
 
-    private int amount;
+    private Long amount;
 
-    private int vendorCode;
+    private Long vendorCode;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Warehouse warehouse;
@@ -23,8 +23,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long idProduct, String name, int amount, int vendorCode, Warehouse ware) {
-        this.idProduct = idProduct;
+    public Product(String name, Long amount, Long vendorCode, Warehouse ware) {
         this.name = name;
         this.amount = amount;
         this.vendorCode = vendorCode;
@@ -47,19 +46,19 @@ public class Product {
         this.name = name;
     }
 
-    public int getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
 
-    public int getVendorCode() {
+    public Long getVendorCode() {
         return vendorCode;
     }
 
-    public void setVendorCode(int vendorCode) {
+    public void setVendorCode(Long vendorCode) {
         this.vendorCode = vendorCode;
     }
 
