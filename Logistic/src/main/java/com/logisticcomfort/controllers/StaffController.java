@@ -7,6 +7,7 @@ import com.logisticcomfort.repos.WarehouseRepo;
 import com.logisticcomfort.service.UserService;
 import com.logisticcomfort.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/staff")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class StaffController {
 
     private UserService userService;

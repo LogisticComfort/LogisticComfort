@@ -6,6 +6,7 @@ import com.logisticcomfort.repos.CompanyRepo;
 import com.logisticcomfort.repos.WarehouseRepo;
 import com.logisticcomfort.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/apply_products")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class applyProductController {
 
     private final ProductService productService;

@@ -63,16 +63,6 @@ public class registryController {
         userRepo.save(user);
         return "redirect:/login";
     }
-
-    @GetMapping()
-    public String mainPage(@AuthenticationPrincipal User user, Model model){
-
-        if(user.getCompany() == null)
-            return "redirect:/create/company";
-
-        model.addAttribute("company", userService.findCompanyByUser(user));
-        return "index";
-    }
 }
 
 

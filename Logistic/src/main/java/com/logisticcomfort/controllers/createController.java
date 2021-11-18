@@ -60,6 +60,10 @@ public class createController {
         if(bindingResult.hasErrors())
             return "create/company";
 
+        if (user.getCompany() != null)
+            return "redirect:/";
+
+
         var set = new HashSet<User>();
         set.add(user);
 
@@ -85,6 +89,9 @@ public class createController {
 
         if (bindingResult.hasErrors())
             return "create/warehouse";
+
+        if(user.getRole() != Role.ADMIN)
+            return "redirect:/";
 
         var company = userService.findCompanyByUser(user);
         company.addAWarehouse(warehouse);
@@ -124,6 +131,9 @@ public class createController {
 
         if(bindingResult.hasErrors())
             return "redirect:/staff";
+
+        if(userAuth.getRole() != Role.ADMIN)
+            return "redirect:/";
 
         user.setActive(true);
         user.setCompany(userService.getCompany(userAuth));

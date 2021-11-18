@@ -1,6 +1,7 @@
 package com.logisticcomfort.controllers;
 
 import com.logisticcomfort.model.Product;
+import com.logisticcomfort.model.Role;
 import com.logisticcomfort.model.User;
 import com.logisticcomfort.repos.WarehouseRepo;
 import com.logisticcomfort.service.*;
@@ -42,6 +43,10 @@ public class warehouseController {
 
     @GetMapping("/{id}")
     public String Show (@PathVariable("id") long id, Model model, @AuthenticationPrincipal User user){
+
+        if ((user.getWarehouse() == null || user.getWarehouse().getId() != id) && user.getRole() != Role.ADMIN )
+            return "redirect:/warehouses";
+
         var warehouse = warehouseRepo.findById(id);
         var products = productService.findAllProductsByWarehouse(warehouse);
         model.addAttribute("products", products);
@@ -62,6 +67,10 @@ public class warehouseController {
       public String DeleteProduct(@RequestParam(value = "id", required = false) long id,
                                   @RequestParam(value = "warehouse", required = false) long warehouseId,
                                   @AuthenticationPrincipal User user, Model model){
+
+        if (user.getRole() != Role.ADMIN)
+            return "redirect:/warehouses/" + String.valueOf(warehouseId);
+
         try {
             productService.deleteProduct(id);
         } catch (Exception exception){
@@ -71,6 +80,4 @@ public class warehouseController {
 
         return "redirect:/warehouses/" + String.valueOf(warehouseId);
     }
-
-
 }
