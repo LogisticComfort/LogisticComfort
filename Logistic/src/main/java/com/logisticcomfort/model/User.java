@@ -23,6 +23,10 @@ public class User implements UserDetails {
     @Size(min = 2, max = 30, message = "Username should be between 2 and 30 characters")
     private String username;
 
+    @NotEmpty(message = "Full name should not be empty")
+    @Size(min = 2, max = 40, message = "Full name should be between 2 and 40 characters")
+    private String fullName;
+
     @NotEmpty(message = "Password should not be empty")
     @Size(min = 3, max = 30, message = "Password be between 3 and 30 characters")
     private String password;
@@ -119,6 +123,7 @@ public class User implements UserDetails {
     public Set<Role> getRoles(){
         return roles;
     }
+
     public Role getRole() {
         return roles.stream().findFirst().get();
     }
@@ -139,5 +144,13 @@ public class User implements UserDetails {
         var set = new HashSet<Role>();
         set.add(role);
         this.roles = set;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }

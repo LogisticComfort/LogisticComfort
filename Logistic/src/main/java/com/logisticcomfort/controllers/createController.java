@@ -135,6 +135,9 @@ public class createController {
         if(userAuth.getRole() != Role.ADMIN)
             return "redirect:/";
 
+        if(!userService.usersWithThisUsername(user.getUsername()))
+            return "redirect:/staff";
+
         user.setActive(true);
         user.setCompany(userService.getCompany(userAuth));
 
