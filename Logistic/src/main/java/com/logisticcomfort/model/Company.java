@@ -1,39 +1,60 @@
 package com.logisticcomfort.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "comp")
+@Table(name = "company")
 public class Company {
 
     @Id
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @NotEmpty(message = "Company name should not be empty")
+    @Size(min = 2, max = 30, message = "Company name should be between 2 and 30 characters")
     private String name;
 
-//    , mappedBy="company"
-//    @JoinColumn(name = "company")
     @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
     private Set<User> author;
 
-    @OneToMany(mappedBy="comp", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
     private Set<Warehouse> warehouses;
 
-    @Column(name = "phoneNumber")
+    @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
+    private Set<ApplyProduct> applyProducts;
+
+    @NotEmpty(message = "Phone number should not be empty")
+    @Size(min = 2, max = 21, message = "Phone number should be between 2 and 30 characters")
+    @Pattern(regexp = "7-\\d+-\\d+-\\d+-\\d+",
+            message = "введите телефон в формате 7-ххх-ххх-хх-хх")
     private String phoneNumber;
-//    @NotBlank(message = "Обязательное поле, введите почту")
-    @Column(name = "email")
+
+    @NotEmpty(message = "Email should not be empty")
+    @Email(message = "Email should be valid")
     private String email;
-//    @NotBlank(message = "Обязательное поле, введите адрес")
-    @Column(name = "addressMainOffice")
+
+    @NotEmpty(message = "Address should not be empty")
+    @Size(min = 2, max = 50, message = "Address should be between 2 and 50 characters")
     private String addressMainOffice;
-//    @NotBlank(message = "Обязательное поле, введите описание компании")
-    @Column(name = "description")
+
+    @NotEmpty(message = "Description should not be empty")
+    @Size(min = 2, max = 200, message = "Description should be between 2 and 200 characters")
     private String description;
 
+
+    public Set<ApplyProduct> getApplyProducts() {
+
+        return applyProducts;
+    }
+
+    public void setApplyProducts(Set<ApplyProduct> applyProducts) {
+        this.applyProducts = applyProducts;
+    }
+
+    public void addApplyProducts(ApplyProduct applyProduct) {
+        this.applyProducts.add(applyProduct);
+    }
 
     public String getEmail() {
         return email;

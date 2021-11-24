@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+  <meta charset="UTF-8">
+  <title>Main Page</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+  <link rel="stylesheet" th:href="@{/public/css/nav_bar.css}">
+
+</head>
+  <body>
+
+      <!-- partial:index.partial.html -->
+      <!-- Navigation Bar -->
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#resNav">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="/" class="navbar-brand" th:text="'Компания:  ' + ${company.getName()}">Company Logo</a>
+        </div>
+        <div class="collapse navbar-collapse" id="resNav">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/">Home</a></li>
+            <li><a href="/staff">Staff</a></li>
+            <li><a href="/apply_products">Apply Products</a></li>
+            <li><a href="/warehouses">Склады</a></li>
+            <li><a href="#">Contact</a></li>
+            <li>
+              <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-lg btn-primary">Выход</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </nav>  <!-- End of Navigation Bar -->
+
+      <!-- Jumbotron -->
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="jumbotron">
+              <h1>Информация о компании</h1>
+              <br>
+              <p class="lead">
+                <table style="border-collapse: collapse">
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Телефон</th>
+                    <th>Почта</th>
+                    <th>Адрес офиса</th>
+                    <th>Описание</th>
+                  </tr>
+                  <tr>
+                    <td><p style="width: 50px"  th:text="${company.getId()}">VALUE</p></td>
+                    <td><p style="width: 100px" th:text="${company.getName()}">VALUE</p></td>
+                    <td><p style="width: 150px" th:text="${company.getPhoneNumber()}">VALUE</p></td>
+                    <td><p style="width: 150px" th:text="${company.getEmail()}">VALUE</p></td>
+                    <td><p style="width: 250px; height: auto" th:text="${company.getAddressMainOffice()}">VALUE</p></td>
+                    <td><p style="width: 400px; height: auto" th:text="${company.getDescription()}"></p></td>
+                  </tr>
+                </table>
+              </p>
+  <!--            <p class="lead">Some simple text so you can see how awesome i am.</p>-->
+  <!--            <button type="btn" class="btn btn-primary">Click me!</button>-->
+            </div>
+          </div>
+        </div>
+      </div>  <!-- End of Jumbotron -->
+
+<!--    &lt;!&ndash; Simple Article &ndash;&gt;-->
+<!--    <div class="container">-->
+<!--      <div class="row">-->
+<!--        <div class="col-xs-12">-->
+<!--          <div class="text-center">-->
+<!--            <h3>Simple article</h3>-->
+<!--            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>-->
+<!--            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>  &lt;!&ndash; End of Simple Article &ndash;&gt;-->
+
+<!-- partial -->
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+      <script  th:src="@{/public/js/script.js}"></script>
+
+  </body>
+</html>

@@ -1,27 +1,18 @@
 package com.logisticcomfort.controllers;
 
-import com.logisticcomfort.model.Company;
-//import com.logisticcomfort.model.Product;
-import com.logisticcomfort.model.Product;
-import com.logisticcomfort.model.User;
-import com.logisticcomfort.model.Warehouse;
-import com.logisticcomfort.repos.CompanyRepo;
-//import com.logisticcomfort.repos.ProductRepo;
-import com.logisticcomfort.repos.ProductRepo;
-import com.logisticcomfort.repos.UserRepo;
-import com.logisticcomfort.repos.WarehouseRepo;
+import com.logisticcomfort.model.*;
+import com.logisticcomfort.repos.*;
+import com.logisticcomfort.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashSet;
+import java.util.List;
 
 @Controller
 @RequestMapping("/create")
@@ -30,17 +21,33 @@ public class createController {
     private final CompanyRepo companyRepo;
     private final UserRepo userRepo;
     private final WarehouseRepo warehouseRepo;
-    private final ProductRepo productRepo;
+    private final ProductService productService;
+    private final ProductService productRepo;
+    private final UserService userService;
+    private final WarehouseService warehouseService;
+
     @Autowired
-    public createController(CompanyRepo companyRepo, UserRepo userRepo, WarehouseRepo warehouseRepo, ProductRepo productRepo) {
+    public createController(CompanyRepo companyRepo,
+                            UserRepo userRepo,
+                            WarehouseRepo warehouseRepo,
+                            ProductService productService,
+                            ProductService productRepo,
+                            UserService userService,
+                            WarehouseService warehouseService) {
         this.companyRepo = companyRepo;
         this.userRepo = userRepo;
         this.warehouseRepo = warehouseRepo;
+        this.productService = productService;
         this.productRepo = productRepo;
+        this.userService = userService;
+        this.warehouseService = warehouseService;
     }
 
     @GetMapping("/company")
-    public String createCompany(Model model){
+    public String createCompany(Model model,
+                                @AuthenticationPrincipal User user){
+        if (user.getCompany() != null)
+            return "redirect:/";
         model.addAttribute("company", new Company());
         return "create/company";
     }
@@ -50,8 +57,12 @@ public class createController {
                          BindingResult bindingResult,
                          @AuthenticationPrincipal User user){
 
-//        if(bindingResult.hasErrors())
-//            return "create/company";
+        if(bindingResult.hasErrors())
+            return "create/company";
+
+        if (user.getCompany() != null)
+            return "redirect:/";
+
 
         var set = new HashSet<User>();
         set.add(user);
@@ -76,38 +87,66 @@ public class createController {
                              BindingResult bindingResult,
                              @AuthenticationPrincipal User user){
 
-        var comp = companyRepo.findById((long)user.getCompany().getId());
+        if (bindingResult.hasErrors())
+            return "create/warehouse";
 
-        var set = new HashSet<Warehouse>();
-        set.add(warehouse);
-        comp.setWarehouses(set);
+        if(user.getRole() != Role.ADMIN)
+            return "redirect:/";
 
-        warehouse.setComp(comp);
+        var company = userService.findCompanyByUser(user);
+        company.addAWarehouse(warehouse);
 
-        warehouseRepo.save(warehouse);
-
-        companyRepo.save(comp);
-
-        return "redirect:/";
-    }
-
-    @GetMapping("/product")
-    public String createProduct(Model model){
-        model.addAttribute("product", new Product());
-        return "create/product";
-    }
-
-    @PostMapping("/product")
-    public String CreateProduct(@ModelAttribute("product") @Valid Product product,
-                             BindingResult bindingResult,
-                             @AuthenticationPrincipal User user) {
-        var warehouse = warehouseRepo.findById((long)user.getCompany().getId());
-
-        product.setWarehouse(warehouse);
+        warehouse.setComp(company);
 
         warehouseRepo.save(warehouse);
-        productRepo.save(product);
-        return "redirect:/";
+
+        companyRepo.save(company);
+
+        return "redirect:/warehouses";
     }
 
+    @PostMapping("/product/{id}")
+    public String CreateProduct(@PathVariable("id") int id, @ModelAttribute("product") @Valid Product product,
+                                BindingResult bindingResult,
+                                @AuthenticationPrincipal User user) {
+        var warehouse = warehouseRepo.findById(id);
+
+//        product.setWarehouse(warehouse);
+//        warehouse.addProducts(product);
+//
+//        warehouseRepo.save(warehouse);
+//        productService.saveProduct(product, warehouse);
+
+        productService.addProductInApply(product, warehouse, companyRepo.findById((long)user.getCompany().getId()));
+
+        return "redirect:/warehouses/" + String.valueOf(id);
+    }
+
+    @PostMapping("/employee")
+    public String CreateEmployee(@ModelAttribute("employee") @Valid User user,
+                                 BindingResult bindingResult,
+                                 @ModelAttribute("warehouseForEmployee") @Valid Long warehouseId,
+                                 Model model,
+                                 @AuthenticationPrincipal User userAuth){
+
+        if(bindingResult.hasErrors())
+            return "redirect:/staff";
+
+        if(userAuth.getRole() != Role.ADMIN)
+            return "redirect:/";
+
+        if(!userService.usersWithThisUsername(user.getUsername()))
+            return "redirect:/staff";
+
+        user.setActive(true);
+        user.setCompany(userService.getCompany(userAuth));
+
+        if(warehouseId != null && warehouseId >= 0){
+            user.setWarehouse(warehouseRepo.findById((long)warehouseId));
+        }
+
+        userRepo.saveAndFlush(user);
+
+        return "redirect:/staff";
+    }
 }
