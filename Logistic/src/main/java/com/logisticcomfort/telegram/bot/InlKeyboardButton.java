@@ -2,13 +2,13 @@ package com.logisticcomfort.telegram.bot;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-public class KeyboardButton extends InlineKeyboardButton {
+public class InlKeyboardButton extends InlineKeyboardButton {
 
     public static class Builder{
-        private KeyboardButton keyboardButton;
+        private InlKeyboardButton keyboardButton;
 
         public Builder(){
-            keyboardButton = new KeyboardButton();
+            keyboardButton = new InlKeyboardButton();
         }
 
         public Builder withText(String text){
@@ -21,7 +21,7 @@ public class KeyboardButton extends InlineKeyboardButton {
             return this;
         }
 
-        public KeyboardButton build(){
+        public InlKeyboardButton build(){
             return keyboardButton;
         }
     }
