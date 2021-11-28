@@ -47,6 +47,17 @@ public class User implements UserDetails {
     @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private Warehouse warehouse;
 
+    @OneToOne(mappedBy="user", fetch = FetchType.LAZY)
+    private TelegramUser telegramUser;
+
+    public TelegramUser getTelegramUser() {
+        return telegramUser;
+    }
+
+    public void setTelegramUser(TelegramUser telegramUser) {
+        this.telegramUser = telegramUser;
+    }
+
     public String getEmail() {
         return email;
     }
