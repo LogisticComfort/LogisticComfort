@@ -26,4 +26,8 @@ public class WarehouseService {
         return set;
     }
 
+    public Warehouse findWarehouseById(long id){
+        return warehouseRepo.findById(id);
+    }
+
 }

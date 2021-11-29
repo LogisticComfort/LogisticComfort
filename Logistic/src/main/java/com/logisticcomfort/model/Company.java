@@ -18,7 +18,7 @@ public class Company {
     @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
     private Set<User> author;
 
-    @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="company", fetch = FetchType.EAGER)
     private Set<Warehouse> warehouses;
 
     @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
