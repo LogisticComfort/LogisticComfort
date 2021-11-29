@@ -4,6 +4,8 @@ import com.logisticcomfort.model.COMMANDS;
 import com.logisticcomfort.model.TelegramUser;
 import com.logisticcomfort.service.TelegramService;
 import com.logisticcomfort.telegram.bot.handler.AuthenticationHandler;
+import com.logisticcomfort.telegram.bot.handler.Buttons;
+import com.logisticcomfort.telegram.bot.handler.MainPageHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -117,22 +119,45 @@ public class Bot extends TelegramLongPollingBot {
 
     private SendMessage getCommandResponse(String text, User user, Long chatId) throws TelegramApiException {
 
+        //Начальное состояние при авторизации
         if(telegramService.findUserByChatId(chatId) == null){
-            return AuthenticationHandler.authentication(chatId);
-        }
-        if (text.equals(COMMANDS.LOG_IN_ACCOUNT.getCommand()) || telegramService.findUserByChatId(chatId).getUser() == null){
-            return AuthenticationHandler.handleWriteLogin(chatId, text);
-        }
-        if (text.equals(COMMANDS.START.getCommand())) {
-            return handleStartCommand(chatId);
+            var sendMessage = AuthenticationHandler.authentication(chatId);
+            Buttons.setAuthenticationButtons(sendMessage);
+            return sendMessage;
         }
 
+        //Нажимает на кнопку Log In, чтобы выйти
+        if(text.equals("Ввести данные заново")){
+            var sendMessage = AuthenticationHandler.logIn(chatId);
+            Buttons.setAuthenticationButtons(sendMessage);
+            return sendMessage;
+        }
 
-        return handleStartCommand(chatId);
+        // Обычная авторизация
+        if (telegramService.findUserByChatId(chatId).getUser() == null){
+            var sendMessage = AuthenticationHandler.handleWriteLogin(chatId, text);
+
+//            Buttons.setAuthenticationButtons(sendMessage);
+            return sendMessage;
+        }
+
+        if(text.equals(COMMANDS.MAIN_PAGE.getCommand())){
+            var sendMessage = MainPageHandler.showMenu(chatId, text);
+            sendMessage.setText("Main page");
+            return sendMessage;
+        }
+
+        if(text.equals(COMMANDS.SIGN_OUT.getCommand())){
+            return MainPageHandler.signOut(chatId);
+        }
+
+        return MainPageHandler.mainPage();
     }
 
 
-//
+
+
+    //
 //    private SendMessage handleNotFoundCommand() {
 //        SendMessage message = new SendMessage();
 //        message.setText("Вы что-то сделали не так. Выберите команду:");

@@ -23,9 +23,29 @@ public class AuthenticationHandler {
 
     public static SendMessage authentication(Long chatId){
         telegramService.saveTelegramUser(new TelegramUser(chatId));
-        var sendMeassge = new SendMessage(String.valueOf(chatId), "");
+        var sendMeassge = new SendMessage(String.valueOf(chatId), "Sig in");
         Buttons.setAuthenticationButtons(sendMeassge);
         return sendMeassge;
+    }
+
+    public static SendMessage logIn(Long chatId){
+        var telegramUser = telegramService.findUserByChatId(chatId);
+
+        try{
+            telegramService.deleteHistoryMessageById(telegramUser.getMessage().getId());
+            var lastMessage = new HistoryMessage(telegramUser, COMMANDS.LOG_IN_ACCOUNT.getCommand());
+            telegramUser.setMessage(lastMessage);
+            telegramService.saveHistoryMessage(lastMessage);
+            telegramService.saveTelegramUser(telegramUser);
+            return new SendMessage(String.valueOf(chatId), "Введите свой логин: ");
+        }catch (Exception exception){
+            var lastMessage = new HistoryMessage(telegramUser, COMMANDS.LOG_IN_ACCOUNT.getCommand());
+            telegramUser.setMessage(lastMessage);
+            telegramService.saveHistoryMessage(lastMessage);
+            telegramService.saveTelegramUser(telegramUser);
+            return new SendMessage(String.valueOf(chatId), "Введите свой логин: ");
+        }
+
     }
 
     public static SendMessage handleWriteLogin(Long chatId, String text){
@@ -53,16 +73,13 @@ public class AuthenticationHandler {
             var username = telegramUser.getMessage().getMessage().replace("login:", "");
             username = username.replace(" ", "");
             var user = userService.findUserByUsername(username);
+
             if (user == null){
-                telegramService.deleteHistoryMessageById(telegramUser.getMessage().getId());
-                var lastMessage = new HistoryMessage(telegramUser, COMMANDS.LOG_IN_ACCOUNT.getCommand());
-                telegramUser.setMessage(lastMessage);
-                telegramService.saveHistoryMessage(lastMessage);
-                telegramService.saveTelegramUser(telegramUser);
-                return new SendMessage(String.valueOf(chatId), "Введите свой логин: ");
+                return new SendMessage(String.valueOf(chatId), "Такого пользователя не существует");
             }
-            if (user.getPassword() == text){
-                return new SendMessage(String.valueOf(chatId), String.format("Введите свой пароль от аккаунта %s: ", text));
+
+            if (!user.getPassword().equals(text)){
+                return new SendMessage(String.valueOf(chatId), String.format("Введите свой пароль от аккаунта %s: ", username));
             }
 
             telegramUser.setUser(user);
@@ -70,7 +87,11 @@ public class AuthenticationHandler {
             var message = telegramUser.getMessage();
             message.setMessage("");
             telegramService.saveHistoryMessage(message);
-            return new SendMessage(String.valueOf(chatId), String.format("%s, вы успешно авторизовались!", user.getFullName()));
+
+//            return new SendMessage(String.valueOf(chatId), String.format("%s, вы успешно авторизовались!", user.getFullName()));
+            var messageSend = MainPageHandler.mainPage();
+            messageSend.setText(String.format("%s, вы успешно авторизовались!", user.getFullName()));
+            return messageSend;
         }
         return new SendMessage(String.valueOf(chatId), "Такой команды нет");
     }
