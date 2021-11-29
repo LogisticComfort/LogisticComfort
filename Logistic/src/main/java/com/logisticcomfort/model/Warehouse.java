@@ -36,7 +36,7 @@ public class Warehouse {
     @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private Company company;
 
-    @OneToMany(mappedBy="warehouse", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="warehouse", fetch = FetchType.EAGER)
     private Set<Product> products;
 
     @OneToMany(mappedBy="warehouse", fetch = FetchType.LAZY)

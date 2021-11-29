@@ -1,47 +1,30 @@
 package com.logisticcomfort.telegram.bot;
 
 import com.logisticcomfort.model.COMMANDS;
-import com.logisticcomfort.model.TelegramUser;
 import com.logisticcomfort.service.TelegramService;
 import com.logisticcomfort.telegram.bot.handler.AuthenticationHandler;
 import com.logisticcomfort.telegram.bot.handler.Buttons;
 import com.logisticcomfort.telegram.bot.handler.MainPageHandler;
+import com.logisticcomfort.telegram.bot.handler.WarehousesHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 // Аннотация @Component необходима, чтобы наш класс распознавался Spring, как полноправный Bean
-@Component
 //@Data
 //@Slf4j
+@Component
 public class Bot extends TelegramLongPollingBot {
-
-//    private final String INFO_LABEL = "О чем канал?";
-//    private final String ACCESS_LABEL = "Как получить доступ?";
-//    private final String SUCCESS_LABEL = "Дайте полный доступ!";
-//    private final String DEMO_LABEL = "Хочу демо-доступ на 3 дня";
-//
-//    private final SubscribersService subscribersService;
-//
 
     @Autowired
     private TelegramService telegramService;
@@ -70,8 +53,6 @@ public class Bot extends TelegramLongPollingBot {
             String text = update.getMessage().getText();
             Long chat_id = update.getMessage().getChatId();
 
-            var nowId =  update.getMessage().getMessageId();
-
             try {
                 SendMessage message = getCommandResponse(text, update.getMessage().getFrom(), chat_id);
                 message.enableHtml(true);
@@ -83,6 +64,19 @@ public class Bot extends TelegramLongPollingBot {
 //                log.error("", e);
 //                SendMessage message = handleNotFoundCommand();
 //                message.setChatId(String.valueOf(chat_id));
+            }
+        }else if (update.hasCallbackQuery()) {
+            try {
+                var chatId = update.getCallbackQuery().getMessage().getChatId();
+                var command = update.getCallbackQuery().getData();
+
+                SendMessage message = getCommandResponseByCallbackQuery(command, update.getCallbackQuery().getFrom(), chatId);
+                message.enableHtml(true);
+                message.setParseMode(ParseMode.HTML);
+                message.setChatId(String.valueOf(chatId));
+                execute(message);
+            } catch (TelegramApiException e) {
+//                log.error("", e);
             }
         }
     }
@@ -117,6 +111,15 @@ public class Bot extends TelegramLongPollingBot {
 //        }
 //    }
 
+    private SendMessage getCommandResponseByCallbackQuery(String text, User user, Long chatId) throws TelegramApiException{
+
+        if(text.substring(0, 10).equals("w12reh0use")){
+            return WarehousesHandler.showInformationAboutWarehouse(text, chatId);
+        }
+
+        return new SendMessage();
+    }
+
     private SendMessage getCommandResponse(String text, User user, Long chatId) throws TelegramApiException {
 
         //Начальное состояние при авторизации
@@ -145,6 +148,10 @@ public class Bot extends TelegramLongPollingBot {
             var sendMessage = MainPageHandler.showMenu(chatId, text);
             sendMessage.setText("Main page");
             return sendMessage;
+        }
+
+        if(text.equals(COMMANDS.WAREHOUSES.getCommand())){
+            return WarehousesHandler.warehousesShow(chatId);
         }
 
         if(text.equals(COMMANDS.SIGN_OUT.getCommand())){
