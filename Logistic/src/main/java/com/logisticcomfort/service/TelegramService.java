@@ -8,6 +8,8 @@ import com.logisticcomfort.repos.TelegramUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class TelegramService {
 
@@ -38,5 +40,13 @@ public class TelegramService {
 
     public void deleteHistoryMessageById(Long id){
         historyMessageRepo.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteTelegramUserByChatId(Long chatId){
+        var user = findUserByChatId(chatId);
+        user.setUser(null);
+        telegramUserRepo.save(user);
+        telegramUserRepo.deleteByChatId(chatId);
     }
 }
