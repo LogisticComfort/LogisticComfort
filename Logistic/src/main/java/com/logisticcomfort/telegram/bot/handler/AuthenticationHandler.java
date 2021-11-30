@@ -89,7 +89,7 @@ public class AuthenticationHandler {
             telegramService.saveHistoryMessage(message);
 
 //            return new SendMessage(String.valueOf(chatId), String.format("%s, вы успешно авторизовались!", user.getFullName()));
-            var messageSend = MainPageHandler.mainPage();
+            var messageSend = MainPageHandler.mainPage(chatId);
             messageSend.setText(String.format("%s, вы успешно авторизовались!", user.getFullName()));
             return messageSend;
         }
