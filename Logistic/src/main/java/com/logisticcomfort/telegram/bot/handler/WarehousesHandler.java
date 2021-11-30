@@ -30,13 +30,13 @@ public class WarehousesHandler {
         this.warehouseService = warehouseService;
     }
 
-    public static SendMessage warehousesShow(Long chatId){
+    public static SendMessage warehousesShow(Long chatId, String callBackCode){
         var user = telegramService.findUserByChatId(chatId).getUser();
         var inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         switch (user.getRole()){
             case ADMIN:
-                inlineKeyboardMarkup = warehousesForAdmin(chatId, user);
+                inlineKeyboardMarkup = warehousesForAdmin(chatId, user, callBackCode);
         }
 
         var sendMessage = new SendMessage();
@@ -49,7 +49,7 @@ public class WarehousesHandler {
         return sendMessage;
     }
 
-    private static InlineKeyboardMarkup warehousesForAdmin(Long chatId, User user){
+    private static InlineKeyboardMarkup warehousesForAdmin(Long chatId, User user, String callBackCode){
         var warehouses = user.getCompany().getWarehouses();
 
         var inlineKeyboardMarkup = new InlineKeyboardMarkup();
@@ -58,7 +58,7 @@ public class WarehousesHandler {
         for (var warehouse:warehouses) {
             var button = new InlineKeyboardButton();
             button.setText(warehouse.getName());
-            button.setCallbackData("w12reh0use" + " " + warehouse.getCompany().getName() + " " + warehouse.getId());
+            button.setCallbackData(callBackCode + " " + warehouse.getCompany().getName() + " " + warehouse.getId());
             List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>(List.of(
                     button
             ));

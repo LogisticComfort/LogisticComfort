@@ -2,10 +2,7 @@ package com.logisticcomfort.telegram.bot;
 
 import com.logisticcomfort.model.COMMANDS;
 import com.logisticcomfort.service.TelegramService;
-import com.logisticcomfort.telegram.bot.handler.AuthenticationHandler;
-import com.logisticcomfort.telegram.bot.handler.Buttons;
-import com.logisticcomfort.telegram.bot.handler.MainPageHandler;
-import com.logisticcomfort.telegram.bot.handler.WarehousesHandler;
+import com.logisticcomfort.telegram.bot.handler.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -81,40 +78,16 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    //    @Override
-//    public void onUpdateReceived(Update update) {
-//        if (update.hasMessage() && update.getMessage().hasText()) {
-//            String text = update.getMessage().getText();
-//            long chat_id = update.getMessage().getChatId();
-//
-//            try {
-//                SendMessage message = getCommandResponse(text, update.getMessage().getFrom(), String.valueOf(chat_id));
-//                message.enableHtml(true);
-//                message.setParseMode(ParseMode.HTML);
-//                message.setChatId(String.valueOf(chat_id));
-//                execute(message);
-//            } catch (TelegramApiException e) {
-////                log.error("", e);
-//                SendMessage message = handleNotFoundCommand();
-//                message.setChatId(String.valueOf(chat_id));
-//            }
-//        } else if (update.hasCallbackQuery()) {
-//            try {
-//                SendMessage message = getCommandResponse(update.getCallbackQuery().getData(), update.getCallbackQuery().getFrom(), String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
-//                message.enableHtml(true);
-//                message.setParseMode(ParseMode.HTML);
-//                message.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
-//                execute(message);
-//            } catch (TelegramApiException e) {
-//                log.error("", e);
-//            }
-//        }
-//    }
+
 
     private SendMessage getCommandResponseByCallbackQuery(String text, User user, Long chatId) throws TelegramApiException{
 
         if(text.substring(0, 10).equals("w12reh0use")){
             return WarehousesHandler.showInformationAboutWarehouse(text, chatId);
+        }
+
+        if(text.substring(0, 11).equals("a32dPr0duct")){
+            return ProductsHandler.addProduct(text, chatId);
         }
 
         return new SendMessage();
@@ -151,61 +124,39 @@ public class Bot extends TelegramLongPollingBot {
         }
 
         if(text.equals(COMMANDS.WAREHOUSES.getCommand())){
-            return WarehousesHandler.warehousesShow(chatId);
+            return WarehousesHandler.warehousesShow(chatId, "w12reh0use");
+        }
+
+        if(text.equals(COMMANDS.ADD_PRODUCT.getCommand())){
+            return WarehousesHandler.warehousesShow(chatId, "a32dPr0duct");
         }
 
         if(text.equals(COMMANDS.SIGN_OUT.getCommand())){
             return MainPageHandler.signOut(chatId);
         }
 
-        return MainPageHandler.mainPage();
+        var message = telegramService.findMessageByTelegramUser(telegramService.findUserByChatId(chatId));
+        if(message.getMessage().substring(0, 14).equals("AddProductName")){
+            return ProductsHandler.addProductWithName(text, chatId);
+        }
+
+        if(message.getMessage().substring(0, 14).equals("AddProductCode")){
+            return ProductsHandler.addProductWithCode(text, chatId);
+        }
+
+//        if(message.getMessage().substring(0, 16).equals("AddProductAmount")){
+//            return ProductsHandler.addProductWithAmount(text, chatId);
+//        }
+
+        if(message.getMessage().substring(0, 13).equals("AddProductEnd")){
+            return ProductsHandler.addProductEnd(text, chatId);
+        }
+
+
+
+        return MainPageHandler.mainPage(chatId);
     }
 
-
-
-
-    //
-//    private SendMessage handleNotFoundCommand() {
-//        SendMessage message = new SendMessage();
-//        message.setText("Вы что-то сделали не так. Выберите команду:");
-//        message.setReplyMarkup(getKeyboard());
-//        return message;
-//    }
-//
-//    private String getChatInviteLink() throws TelegramApiException {
-//        ExportChatInviteLink exportChatInviteLink = new ExportChatInviteLink();
-//        exportChatInviteLink.setChatId(privateChannelId);
-//        return execute(exportChatInviteLink);
-//    }
-//
-//    private SendMessage handleDemoCommand(String username, String id, String name, String chatId) throws TelegramApiException {
-//        SendMessage message = new SendMessage();
-//
-//        if (subscribersService.isDemoAccess(chatId)) {
-//            message.setText("Ссылка для доступа к закрытому каналу: " + getChatInviteLink() + " \nЧерез 3 дня вы будете исключены из канала");
-//
-//            addInfoSubscriberToDb(username, chatId, name, TypeSubscribe.DEMO);
-//        } else {
-//            message.setText("Вы уже получали демо-доступ");
-//        }
-//
-//        message.setReplyMarkup(getKeyboard());
-//
-//        return message;
-//    }
-//
-//    private Subscriber addInfoSubscriberToDb(String username, String chatId, String name,
-//                                             TypeSubscribe typeSubscribe) {
-//        Subscriber subscriber = new Subscriber();
-//        subscriber.setTypeSubscribe(typeSubscribe);
-//        subscriber.setTelegramId(chatId);
-//        subscriber.setName(name);
-//        subscriber.setLogin(username);
-//        subscriber.setStartDate(LocalDateTime.now());
-//
-//        return subscribersService.add(subscriber);
-//    }
-//
     private SendMessage handleStartCommand(Long chatId) {
         SendMessage message = new SendMessage();
         if (telegramService.findUserByChatId(chatId) == null){
@@ -224,26 +175,36 @@ public class Bot extends TelegramLongPollingBot {
         message.setText("Доступные команды:");
         return message;
     }
+
+
+//    @Override
+//    public void onUpdateReceived(Update update) {
+//        if (update.hasMessage() && update.getMessage().hasText()) {
+//            String text = update.getMessage().getText();
+//            long chat_id = update.getMessage().getChatId();
 //
-//    private SendMessage handleInfoCommand() {
-//        SendMessage message = new SendMessage();
-//        message.setText("Это канал о самых вкусных пирожочках");
-//        message.setReplyMarkup(getKeyboard());
-//        return message;
-//    }
-//
-//    private SendMessage handleAccessCommand() {
-//        SendMessage message = new SendMessage();
-//        message.setText("Чтобы получить полный доступ, вам надо сказать волшебное слово");
-//        message.setReplyMarkup(getKeyboard());
-//        return message;
-//    }
-//
-//    private SendMessage handleSuccessCommand() {
-//        SendMessage message = new SendMessage();
-//        message.setText("После проверки вам выдадут полный доступ");
-//        message.setReplyMarkup(getKeyboard());
-//        return message;
+//            try {
+//                SendMessage message = getCommandResponse(text, update.getMessage().getFrom(), String.valueOf(chat_id));
+//                message.enableHtml(true);
+//                message.setParseMode(ParseMode.HTML);
+//                message.setChatId(String.valueOf(chat_id));
+//                execute(message);
+//            } catch (TelegramApiException e) {
+////                log.error("", e);
+//                SendMessage message = handleNotFoundCommand();
+//                message.setChatId(String.valueOf(chat_id));
+//            }
+//        } else if (update.hasCallbackQuery()) {
+//            try {
+//                SendMessage message = getCommandResponse(update.getCallbackQuery().getData(), update.getCallbackQuery().getFrom(), String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
+//                message.enableHtml(true);
+//                message.setParseMode(ParseMode.HTML);
+//                message.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
+//                execute(message);
+//            } catch (TelegramApiException e) {
+//                log.error("", e);
+//            }
+//        }
 //    }
 //
 //    private InlineKeyboardMarkup getKeyboard() {

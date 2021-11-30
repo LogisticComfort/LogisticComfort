@@ -23,7 +23,7 @@ public class MainPageHandler {
         this.userService = userService;
     }
 
-    public static SendMessage mainPage() {
+    public static SendMessage mainPage(Long chatId) {
         var sendMessage = new SendMessage();
         sendMessage.setText("Your menu");
         var buttonMainPage = new KeyboardButton();
@@ -36,11 +36,18 @@ public class MainPageHandler {
                 firstKeyboardRow
         ));
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
+
         return sendMessage;
     }
 
     public static SendMessage showMenu(Long chatId, String text){
         var user = telegramService.findUserByChatId(chatId).getUser();
+
+        var telegramUser = telegramService.findUserByChatId(chatId);
+        var historyMessage = telegramService.findMessageByTelegramUser(telegramUser);
+
+        historyMessage.setMessage("");
+        telegramService.saveHistoryMessage(historyMessage);
 
         switch (user.getRole()){
             case ADMIN:
