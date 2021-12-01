@@ -78,23 +78,6 @@ public class ProductsHandler {
         return sendMessage;
     }
 
-//    public static SendMessage addProductWithAmount(String text, Long chatId){
-//        var user = telegramService.findUserByChatId(chatId);
-//        var historyMessage = telegramService.findMessageByTelegramUser(user);
-//        var warehouseIdWithProductNameAndCode = historyMessage.getMessage().split(" ")[1] + " "
-//                + historyMessage.getMessage().split(" ")[2] + " " + historyMessage.getMessage().split(" ")[3];
-//
-//        historyMessage.setMessage("AddProductEnd " + warehouseIdWithProductNameAndCode + " " + text);
-//        telegramService.saveHistoryMessage(historyMessage);
-//
-//        var sendMessage = new SendMessage();
-//        sendMessage = MainPageHandler.mainPage(chatId);
-//        sendMessage.setText(String.format("Товар с именем \"%s\", артикулом \"%s\" и количеством \"%s\" \n Введите пожалуйста количество товара",
-//                historyMessage.getMessage().split(" ")[2], historyMessage.getMessage().split(" ")[3], text));
-//
-//        return sendMessage;
-//    }
-
     public static SendMessage addProductEnd(String text, Long chatId){
         var user = telegramService.findUserByChatId(chatId);
         var historyMessage = telegramService.findMessageByTelegramUser(user);
@@ -104,7 +87,6 @@ public class ProductsHandler {
         var nameProduct = message[2];
         var vendorCodeProduct = Long.valueOf(message[3]);
         var amountOfProduct = Long.valueOf(text);
-//        var comp = userService.getCompany(telegramService.findUserByChatId(chatId).getUser());
 
         productService.addProductInApply(new Product(nameProduct, amountOfProduct, vendorCodeProduct, warehouse), warehouse, userService.getCompany(telegramService.findUserByChatId(chatId).getUser()));
 

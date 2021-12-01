@@ -90,6 +90,10 @@ public class Bot extends TelegramLongPollingBot {
             return ProductsHandler.addProduct(text, chatId);
         }
 
+        if(text.substring(0, 12).equals("ApplyProduct")){
+            return ApplyProductsHandler.showApplyProduct(text, chatId);
+        }
+
         return new SendMessage();
     }
 
@@ -131,6 +135,10 @@ public class Bot extends TelegramLongPollingBot {
             return WarehousesHandler.warehousesShow(chatId, "a32dPr0duct");
         }
 
+        if(text.equals(COMMANDS.APPLY_PRODUCT.getCommand())){
+            return ApplyProductsHandler.showApplyProducts(text, chatId);
+        }
+
         if(text.equals(COMMANDS.SIGN_OUT.getCommand())){
             return MainPageHandler.signOut(chatId);
         }
@@ -144,12 +152,12 @@ public class Bot extends TelegramLongPollingBot {
             return ProductsHandler.addProductWithCode(text, chatId);
         }
 
-//        if(message.getMessage().substring(0, 16).equals("AddProductAmount")){
-//            return ProductsHandler.addProductWithAmount(text, chatId);
-//        }
-
         if(message.getMessage().substring(0, 13).equals("AddProductEnd")){
             return ProductsHandler.addProductEnd(text, chatId);
+        }
+
+        if(message.getMessage().split(" ")[0].equals("APPLY_PRODUCT")){
+            return ApplyProductsHandler.applyProductAllowedOrNot(text, chatId);
         }
 
 

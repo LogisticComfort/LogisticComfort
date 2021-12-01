@@ -17,7 +17,7 @@ public class Product {
 
     private Long vendorCode;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Warehouse warehouse;
 
     public Product() {

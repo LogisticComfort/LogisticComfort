@@ -2,6 +2,7 @@ package com.logisticcomfort.telegram.bot.handler;
 
 import com.logisticcomfort.model.Product;
 import com.logisticcomfort.model.User;
+import com.logisticcomfort.repos.ProductRepo;
 import com.logisticcomfort.service.TelegramService;
 import com.logisticcomfort.service.UserService;
 import com.logisticcomfort.service.WarehouseService;
@@ -22,12 +23,15 @@ public class WarehousesHandler {
     private static TelegramService telegramService;
     private static UserService userService;
     private static WarehouseService warehouseService;
+    private static ProductRepo productRepo;
 
     @Autowired
-    public WarehousesHandler(TelegramService telegramService, UserService userService, WarehouseService warehouseService) {
+    public WarehousesHandler(TelegramService telegramService, UserService userService,
+                             WarehouseService warehouseService, ProductRepo productRepo) {
         this.telegramService = telegramService;
         this.userService = userService;
         this.warehouseService = warehouseService;
+        this.productRepo = productRepo;
     }
 
     public static SendMessage warehousesShow(Long chatId, String callBackCode){
@@ -74,7 +78,7 @@ public class WarehousesHandler {
         var warehouseId = Integer.valueOf(text.split(" ")[2]);
         var warehouse = warehouseService.findWarehouseById(warehouseId);
 
-        var products = warehouse.getProducts();
+        var products = productRepo.findAllByWarehouseOrderByVendorCodeAsc(warehouse);
 
         var inlineKeyboardMarkup = warehouseKeyboardWithProducts(products);
 
