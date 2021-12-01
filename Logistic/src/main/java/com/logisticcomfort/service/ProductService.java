@@ -58,6 +58,10 @@ public class ProductService {
         productRepo.save(product);
     }
 
+    public void saveApplyProduct(ApplyProduct applyProduct){
+        applyProductRepo.save(applyProduct);
+    }
+
     public Set<ApplyProduct> findAllApplyProductsByCompany(Company company){
         return applyProductRepo.findAllByCompany(company);
     }
@@ -84,5 +88,9 @@ public class ProductService {
         applyProductRepo.save(applyProduct);
         company.addApplyProducts(applyProduct);
         companyRepo.save(company);
+    }
+
+    public ApplyProduct findApplyProductById(long id){
+        return applyProductRepo.findById(id);
     }
 }

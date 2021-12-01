@@ -30,6 +30,10 @@ public class TelegramService {
         return historyMessageRepo.findByTelegramUser(user);
     }
 
+    public HistoryMessage findMessageByChatId(Long chatId){
+        return historyMessageRepo.findByTelegramUser(findUserByChatId(chatId));
+    }
+
     public void saveTelegramUser(TelegramUser user){
         telegramUserRepo.saveAndFlush(user);
     }
