@@ -33,10 +33,10 @@ public class Warehouse {
     @Email(message = "Email should be valid")
     private String email;
 
-    @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private Company company;
 
-    @OneToMany(mappedBy="warehouse", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="warehouse", fetch = FetchType.EAGER)
     private Set<Product> products;
 
     @OneToMany(mappedBy="warehouse", fetch = FetchType.LAZY)

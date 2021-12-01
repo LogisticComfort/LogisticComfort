@@ -24,7 +24,7 @@ public class ApplyProduct {
 
     private StatusProduct status;
 
-    @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne (optional=true, fetch = FetchType.EAGER)
     private Company company;
 
     public ApplyProduct() {

@@ -74,6 +74,12 @@
             <version>6.2.0.Final</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-spring-boot-starter</artifactId>
+            <version>5.4.0.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>

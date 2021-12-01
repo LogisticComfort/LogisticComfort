@@ -15,13 +15,13 @@ public class Company {
     @Size(min = 2, max = 30, message = "Company name should be between 2 and 30 characters")
     private String name;
 
-    @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="company", fetch = FetchType.EAGER)
     private Set<User> author;
 
-    @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="company", fetch = FetchType.EAGER)
     private Set<Warehouse> warehouses;
 
-    @OneToMany(mappedBy="company", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="company", fetch = FetchType.EAGER)
     private Set<ApplyProduct> applyProducts;
 
     @NotEmpty(message = "Phone number should not be empty")

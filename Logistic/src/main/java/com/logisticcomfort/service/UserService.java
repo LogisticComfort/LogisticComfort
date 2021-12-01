@@ -52,6 +52,10 @@ public class UserService implements UserDetailsService {
         return userRepo.findById((long) id);
     }
 
+    public User findUserByUsername(String username){
+        return userRepo.findByUsername(username);
+    }
+
     public boolean usersWithThisUsername(String username){
         return userRepo.findByUsername(username) == null;
     }
