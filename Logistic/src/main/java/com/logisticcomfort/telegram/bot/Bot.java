@@ -23,6 +23,7 @@ import java.util.List;
 @Component
 public class Bot extends TelegramLongPollingBot {
 
+
     @Autowired
     private TelegramService telegramService;
 
@@ -82,17 +83,46 @@ public class Bot extends TelegramLongPollingBot {
 
     private SendMessage getCommandResponseByCallbackQuery(String text, User user, Long chatId) throws TelegramApiException{
 
-        if(text.substring(0, 10).equals("w12reh0use")){
-            return WarehousesHandler.showInformationAboutWarehouse(text, chatId);
+        try{
+            if (text.substring(0, 10).equals("w12reh0use")) {
+                return WarehousesHandler.showInformationAboutWarehouse(text, chatId);
+            }
+        }catch(Exception exception){
+            exception.printStackTrace();
         }
 
-        if(text.substring(0, 11).equals("a32dPr0duct")){
-            return ProductsHandler.addProduct(text, chatId);
+        try{
+            if (text.substring(0, 11).equals("a32dPr0duct")) {
+                return ProductsHandler.addProduct(text, chatId);
+            }
+        }catch(Exception exception){
+            exception.printStackTrace();
         }
 
-        if(text.substring(0, 12).equals("ApplyProduct")){
-            return ApplyProductsHandler.showApplyProduct(text, chatId);
+        try {
+            if (text.substring(0, 12).equals("ApplyProduct")) {
+                return ApplyProductsHandler.showApplyProduct(text, chatId);
+            }
+        }catch(Exception exception){
+            exception.printStackTrace();
         }
+
+
+        if(text.startsWith("Person")){
+            return PersonalHandler.showEmployee(text, chatId);
+        }
+
+        if(text.startsWith("EditRole ")){
+            return PersonalHandler.editRole(text, chatId);
+        }
+
+        if(text.startsWith("EditWarehouse ")){
+            return PersonalHandler.editWarehouse(text, chatId);
+        }
+
+        if(text.startsWith("EditRoleWith ") || text.startsWith("EditWarehouseWith "))
+            return PersonalHandler.allowChanges(text,chatId);
+
 
         return new SendMessage();
     }
@@ -139,6 +169,10 @@ public class Bot extends TelegramLongPollingBot {
             return ApplyProductsHandler.showApplyProducts(text, chatId);
         }
 
+        if (text.equals(COMMANDS.PERSONAL.getCommand())){
+            return PersonalHandler.initialPersonalPage(text,chatId);
+        }
+
         if(text.equals(COMMANDS.SIGN_OUT.getCommand())){
             return MainPageHandler.signOut(chatId);
         }
@@ -159,6 +193,9 @@ public class Bot extends TelegramLongPollingBot {
         if(message.getMessage().split(" ")[0].equals("APPLY_PRODUCT")){
             return ApplyProductsHandler.applyProductAllowedOrNot(text, chatId);
         }
+
+        if(text.startsWith("Allow changes"))
+            return EditHandler.editData(chatId);
 
 
 
@@ -183,7 +220,6 @@ public class Bot extends TelegramLongPollingBot {
         message.setText("Доступные команды:");
         return message;
     }
-
 
 //    @Override
 //    public void onUpdateReceived(Update update) {

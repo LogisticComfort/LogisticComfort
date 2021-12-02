@@ -59,4 +59,8 @@ public class UserService implements UserDetailsService {
     public boolean usersWithThisUsername(String username){
         return userRepo.findByUsername(username) == null;
     }
+
+    public void saveUser(User user){
+        userRepo.saveAndFlush(user);
+    }
 }
