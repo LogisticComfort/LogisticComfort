@@ -1,6 +1,7 @@
 package com.logisticcomfort.telegram.bot;
 
 import com.logisticcomfort.model.COMMANDS;
+import com.logisticcomfort.model.Role;
 import com.logisticcomfort.service.TelegramService;
 import com.logisticcomfort.telegram.bot.handler.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,6 +157,7 @@ public class Bot extends TelegramLongPollingBot {
             return sendMessage;
         }
 
+        var role = telegramService.findUserByChatId(chatId).getUser().getRole();
         if(text.equals(COMMANDS.MAIN_PAGE.getCommand())){
             var sendMessage = MainPageHandler.showMenu(chatId, text);
             sendMessage.setText("Main page");
@@ -170,11 +172,11 @@ public class Bot extends TelegramLongPollingBot {
             return WarehousesHandler.warehousesShow(chatId, "a32dPr0duct");
         }
 
-        if(text.equals(COMMANDS.APPLY_PRODUCT.getCommand())){
+        if(text.equals(COMMANDS.APPLY_PRODUCT.getCommand()) && role == Role.ADMIN){
             return ApplyProductsHandler.showApplyProducts(text, chatId);
         }
 
-        if (text.equals(COMMANDS.PERSONAL.getCommand())){
+        if (text.equals(COMMANDS.PERSONAL.getCommand()) && role == Role.ADMIN){
             return PersonalHandler.initialPersonalPage(text,chatId);
         }
 
@@ -182,12 +184,12 @@ public class Bot extends TelegramLongPollingBot {
             return MainPageHandler.signOut(chatId);
         }
 
-        if (text.equals(COMMANDS.ADD_EMPLOYEE.getCommand()))
+        if (text.equals(COMMANDS.ADD_EMPLOYEE.getCommand()) && role == Role.ADMIN)
             return PersonalHandler.newUserMain(text,chatId);
 
         var message = telegramService.findMessageByTelegramUser(telegramService.findUserByChatId(chatId));
 
-        if(message.getMessage().startsWith("UserAdd")){
+        if(message.getMessage().startsWith("UserAdd") && role == Role.ADMIN){
             var length = message.getMessage().split(" ").length;
             if (length == 1)
                 return PersonalHandler.newUserWriteFullName(text, chatId);
@@ -212,11 +214,11 @@ public class Bot extends TelegramLongPollingBot {
             return ProductsHandler.addProductEnd(text, chatId);
         }
 
-        if(message.getMessage().split(" ")[0].equals("APPLY_PRODUCT")){
+        if(message.getMessage().split(" ")[0].equals("APPLY_PRODUCT") && role == Role.ADMIN){
             return ApplyProductsHandler.applyProductAllowedOrNot(text, chatId);
         }
 
-        if(text.startsWith("Allow changes"))
+        if(text.startsWith("Allow changes") && role == Role.ADMIN)
             return EditHandler.editData(chatId);
 
 
