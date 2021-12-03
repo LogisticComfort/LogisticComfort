@@ -41,7 +41,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne (optional=true, fetch = FetchType.EAGER)
     private Company company;
 
     @ManyToOne (optional=true, fetch = FetchType.EAGER)

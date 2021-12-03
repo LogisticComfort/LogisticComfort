@@ -11,6 +11,7 @@ public enum COMMANDS {
     PERSONAL("PERSONAL"),
     ADD_PRODUCT("ADD PRODUCT"),
     SIGN_OUT("SIGN OUT"),
+    ADD_EMPLOYEE("ADD EMPLOYEE"),
 
     DEMO("/demo"),
     ACCESS("/access"),

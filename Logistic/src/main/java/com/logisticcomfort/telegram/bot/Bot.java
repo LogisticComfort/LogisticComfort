@@ -107,6 +107,11 @@ public class Bot extends TelegramLongPollingBot {
             exception.printStackTrace();
         }
 
+        if (text.startsWith("newUserWriteRole"))
+            return PersonalHandler.newUserWriteWarehouse(text, chatId);
+
+        if (text.startsWith("newUserWriteWarehouse"))
+            return PersonalHandler.createNewUser(text, chatId);
 
         if(text.startsWith("Person")){
             return PersonalHandler.showEmployee(text, chatId);
@@ -177,7 +182,24 @@ public class Bot extends TelegramLongPollingBot {
             return MainPageHandler.signOut(chatId);
         }
 
+        if (text.equals(COMMANDS.ADD_EMPLOYEE.getCommand()))
+            return PersonalHandler.newUserMain(text,chatId);
+
         var message = telegramService.findMessageByTelegramUser(telegramService.findUserByChatId(chatId));
+
+        if(message.getMessage().startsWith("UserAdd")){
+            var length = message.getMessage().split(" ").length;
+            if (length == 1)
+                return PersonalHandler.newUserWriteFullName(text, chatId);
+            if (length == 2)
+                return PersonalHandler.newUserWritePassword(text, chatId);
+            if (length == 3)
+                return PersonalHandler.newUserWriteEmail(text, chatId);
+            if (length == 4)
+                return PersonalHandler.newUserWriteRole(text, chatId);
+
+        }
+
         if(message.getMessage().substring(0, 14).equals("AddProductName")){
             return ProductsHandler.addProductWithName(text, chatId);
         }

@@ -2,6 +2,7 @@ package com.logisticcomfort.telegram.bot.handler;
 
 import com.logisticcomfort.model.COMMANDS;
 import com.logisticcomfort.model.Role;
+import com.logisticcomfort.model.User;
 import com.logisticcomfort.model.Warehouse;
 import com.logisticcomfort.repos.CompanyRepo;
 import com.logisticcomfort.service.ProductService;
@@ -89,7 +90,7 @@ public class PersonalHandler {
         sendMessage.setText(".");
         //Создаем кнопки
         var buttonAddEmployee = new KeyboardButton();
-        buttonAddEmployee.setText("ADD EMPLOYEE");
+        buttonAddEmployee.setText(COMMANDS.ADD_EMPLOYEE.getCommand());
 
         var buttonMainPage = new KeyboardButton();
         buttonMainPage.setText(COMMANDS.MAIN_PAGE.getCommand());
@@ -244,5 +245,111 @@ public class PersonalHandler {
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
 
         return sendMessage;
+    }
+
+    public static SendMessage newUserMain(String text, Long chatId){
+        var sendMessage = MainPageHandler.mainPage(chatId);
+        sendMessage.setText("Введите логин: ");
+
+        var historyMessage = telegramService.findMessageByChatId(chatId);
+        historyMessage.setMessage("UserAdd");
+        telegramService.saveHistoryMessage(historyMessage);
+        return sendMessage;
+    }
+
+    public static SendMessage newUserWriteFullName(String text, Long chatId){
+        if (userService.findUserByUsername(text) != null)
+            return new SendMessage(String.valueOf(chatId), "Пользователь с таким логином уже есть. \nПопробуйте ещё раз.");
+
+        var historyMessage = telegramService.findMessageByChatId(chatId);
+        historyMessage.setMessage(historyMessage.getMessage() + " " + text);
+        telegramService.saveHistoryMessage(historyMessage);
+
+        return new SendMessage(String.valueOf(chatId), "Введите пожалуйста полное имя пользователя: ");
+    }
+
+    public static SendMessage newUserWritePassword(String text, Long chatId){
+        var historyMessage = telegramService.findMessageByChatId(chatId);
+        historyMessage.setMessage(historyMessage.getMessage() + " " + text);
+        telegramService.saveHistoryMessage(historyMessage);
+
+        return new SendMessage(String.valueOf(chatId), "Введите пожалуйста пароль для пользователя: ");
+    }
+
+    public static SendMessage newUserWriteEmail(String text, Long chatId){
+        var historyMessage = telegramService.findMessageByChatId(chatId);
+        historyMessage.setMessage(historyMessage.getMessage() + " " + text);
+        telegramService.saveHistoryMessage(historyMessage);
+
+        return new SendMessage(String.valueOf(chatId), "Введите пожалуйста email для пользователя: ");
+    }
+
+    public static SendMessage newUserWriteRole(String text, Long chatId){
+        String EMAIL_REGEX = "([a-zA-Z0-9]+(?:[._+-][a-zA-Z0-9]+)*)@([a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*[.][a-zA-Z]{2,})";
+        if(!text.matches(EMAIL_REGEX))
+            return new SendMessage(String.valueOf(chatId), "Неправильный формат email.\nПопробуйте ещё раз ввести email:" );
+        var historyMessage = telegramService.findMessageByChatId(chatId);
+        historyMessage.setMessage(historyMessage.getMessage() + " " + text);
+        telegramService.saveHistoryMessage(historyMessage);
+
+        var sendMessage = new SendMessage(String.valueOf(chatId), "Введите пожалуйста email для пользователя: ");
+        List<List<InlineKeyboardButton>> keyboardButtons = new ArrayList<>();
+        for (var role: Role.values()) {
+            var inlineKeyboardRow = List.of(
+                    (InlineKeyboardButton) new InlKeyboardButton.Builder().withText(role.name()).withCallbackData("newUserWriteRole " + role.name()).build()
+            );
+            keyboardButtons.add(inlineKeyboardRow);
+        }
+
+        var inlineKeyboardMarkup = new InlineKeyboardMarkup(keyboardButtons);
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+
+        return sendMessage;
+    }
+
+    public static SendMessage newUserWriteWarehouse(String text, Long chatId){
+        var historyMessage = telegramService.findMessageByChatId(chatId);
+        var company = telegramService.findUserByChatId(chatId).getUser().getCompany();
+        historyMessage.setMessage(historyMessage.getMessage() + " " + text.split(" ")[1]);
+        telegramService.saveHistoryMessage(historyMessage);
+
+        var sendMessage = new SendMessage(String.valueOf(chatId), "Введите пожалуйста email для пользователя: ");
+        List<List<InlineKeyboardButton>> keyboardButtons = new ArrayList<>();
+        for (var warehouse: company.getWarehouses()) {
+            var inlineKeyboardRow = List.of(
+                    (InlineKeyboardButton) new InlKeyboardButton.Builder().withText(warehouse.getName()).withCallbackData("newUserWriteWarehouse " + warehouse.getId()).build()
+            );
+            keyboardButtons.add(inlineKeyboardRow);
+        }
+
+        var inlineKeyboardMarkup = new InlineKeyboardMarkup(keyboardButtons);
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+
+        return sendMessage;
+    }
+
+    public static SendMessage createNewUser(String text, Long chatId){
+        var historyMessage = telegramService.findMessageByChatId(chatId);
+        var array = historyMessage.getMessage().split(" ");
+        var user = new User();
+        try {
+            user.setUsername(array[1]);
+            user.setFullName(array[2]);
+            user.setPassword(array[3]);
+            user.setEmail(array[4]);
+            user.editRole(Role.valueOf(array[5]));
+            user.setWarehouse(warehouseService.findWarehouseById(Long.parseLong(text.split(" ")[1])));
+            user.setActive(true);
+            user.setCompany(telegramService.findUserByChatId(chatId).getUser().getCompany());
+            userService.saveUser(user);
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return new SendMessage(String.valueOf(chatId), "В данных ошибка");
+        }
+
+        historyMessage.setMessage("");
+        telegramService.saveHistoryMessage(historyMessage);
+        
+        return new SendMessage(String.valueOf(chatId), "Well done!");
     }
 }
