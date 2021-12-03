@@ -77,9 +77,13 @@ public class Buttons {
         var sendMessage = new SendMessage();
 
         var firstKeyboardRow = new KeyboardRow();
+        firstKeyboardRow.addAll(List.of(
+                COMMANDS.WAREHOUSES.getCommand()
+        ));
 
         var secondKeyboardRow = new KeyboardRow();
         secondKeyboardRow.addAll(List.of(
+                COMMANDS.ADD_PRODUCT.getCommand(),
                 COMMANDS.SIGN_OUT.getCommand()
         ));
 
