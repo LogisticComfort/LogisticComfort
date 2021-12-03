@@ -44,6 +44,7 @@ public class User implements UserDetails {
     @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     private Company company;
 
+
     @ManyToOne (optional=true, fetch = FetchType.EAGER)
     private Warehouse warehouse;
 
