@@ -71,6 +71,7 @@ public class createController {
         company.setAuthor(set);
         user.setCompany(company);
 
+        companyRepo.save(company);
         userRepo.save(user);
 
         return "redirect:/";
