@@ -93,5 +93,27 @@ public class StaffController {
         return "redirect:/staff/";
     }
 
+    @GetMapping("/update_employee/{id}")
+    public String updateEmpForm(@PathVariable(value = "id", required = false) long id,
+                                 @AuthenticationPrincipal User user, Model model) {
+        var userInfo = userService.findUserById(id);
+        model.addAttribute("empUpdate", userInfo);
+        return "update_employee";
+    }
 
+    @PostMapping("/update_employee/{id}")
+    public String updateWare(@PathVariable(value = "id", required = false) long id,
+                             @ModelAttribute("empUpdate") @Valid User UserInfo,
+                             BindingResult bindingResult,
+                             @AuthenticationPrincipal User user) {
+
+        if (user.getRole() != Role.ADMIN) {
+            return "redirect:/warehouses/";
+        }
+
+        var userUpdate = userService.findUserById(id);
+        userService.updateEmployee(userUpdate, UserInfo);
+        userRepo.save(userUpdate);
+        return "redirect:/staff/";
+    }
 }
