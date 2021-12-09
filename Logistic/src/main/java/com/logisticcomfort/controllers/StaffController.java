@@ -2,6 +2,7 @@ package com.logisticcomfort.controllers;
 
 import com.logisticcomfort.model.Role;
 import com.logisticcomfort.model.User;
+import com.logisticcomfort.model.Warehouse;
 import com.logisticcomfort.repos.UserRepo;
 import com.logisticcomfort.repos.WarehouseRepo;
 import com.logisticcomfort.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +26,7 @@ public class StaffController {
     private WarehouseService warehouseService;
     private WarehouseRepo warehouseRepo;
     private UserRepo userRepo;
+    private Model modelPublic;
 
     @Autowired
     public StaffController(UserService userService, WarehouseService warehouseService, WarehouseRepo warehouseRepo, UserRepo userRepo) {
@@ -73,5 +76,22 @@ public class StaffController {
         userRepo.saveAndFlush(user);
         return "redirect:/staff/show_employee/" + String.valueOf(id);
     }
+
+    @GetMapping("/employee_delete/{id}")
+    public String deleteEmployee(@PathVariable(value = "id", required = false) long id,
+                                 @AuthenticationPrincipal User user, Model model) {
+        if (user.getRole() != Role.ADMIN) {
+            return "redirect:/staff/";
+        }
+        var deleteEmployee = userService.findUserById(id);
+        try {
+            userService.deleteEmployee(id);
+        } catch (Exception e) {
+            modelPublic = model.addAttribute("error", true);
+            System.out.println(e.getMessage());
+        }
+        return "redirect:/staff/";
+    }
+
 
 }

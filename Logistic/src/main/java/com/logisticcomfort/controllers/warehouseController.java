@@ -3,6 +3,7 @@ package com.logisticcomfort.controllers;
 import com.logisticcomfort.model.Product;
 import com.logisticcomfort.model.Role;
 import com.logisticcomfort.model.User;
+import com.logisticcomfort.model.Warehouse;
 import com.logisticcomfort.repos.WarehouseRepo;
 import com.logisticcomfort.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,34 +11,33 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/warehouses")
 public class warehouseController {
 
-    private UserService userService;
-    private ProductService productService;
-    private WarehouseRepo warehouseRepo;
+    private final UserService userService;
+    private final ProductService productService;
+    private final WarehouseRepo warehouseRepo;
+    private final WarehouseService warehouseService;
 
     private Model modelPublic;
 
     @Autowired
-    public warehouseController(UserService userService, ProductService productService, WarehouseRepo warehouseRepo) {
+    public warehouseController(UserService userService, ProductService productService, WarehouseRepo warehouseRepo, WarehouseService warehouseService, WarehouseService warehouseService1) {
         this.userService = userService;
         this.productService = productService;
         this.warehouseRepo = warehouseRepo;
+        this.warehouseService = warehouseService1;
     }
 
     @GetMapping()
     public String warehousesPage(@AuthenticationPrincipal User user, Model model){
         model.addAttribute("warehouses", userService.findAllWarehousesByUser(user));
         model.addAttribute("company", userService.findCompanyByUser(user));
-
         return "warehouses";
     }
 
@@ -79,5 +79,46 @@ public class warehouseController {
         }
 
         return "redirect:/warehouses/" + String.valueOf(warehouseId);
+    }
+
+    @GetMapping("/ware_delete/{id}")
+    public String deleteWarehouse(@PathVariable(value = "id", required = false) long id,
+                                  @AuthenticationPrincipal User user, Model model) {
+        if (user.getRole() != Role.ADMIN) {
+            return "redirect:/warehouses/";
+        }
+
+
+        try {
+            warehouseService.deleteWarehouse(id);
+        } catch (Exception e) {
+            modelPublic = model.addAttribute("error", true);
+            System.out.println(e.getMessage());
+        }
+        return "redirect:/warehouses/";
+    }
+
+    @GetMapping("/update_ware/{id}")
+    public String updateWareForm(@PathVariable(value = "id", required = false) long id,
+                                 @AuthenticationPrincipal User user, Model model) {
+        var warehouse = warehouseService.findWarehouseById(id);
+        model.addAttribute("wareUpdate", warehouse);
+        return "update_ware";
+    }
+
+    @PostMapping("/update_ware/{id}")
+    public String updateWare(@PathVariable(value = "id", required = false) long id,
+                             @ModelAttribute("wareUpdate") @Valid Warehouse warehouse,
+                             BindingResult bindingResult,
+                             @AuthenticationPrincipal User user) {
+
+        if (user.getRole() != Role.ADMIN) {
+            return "redirect:/warehouses/";
+        }
+
+        var ware = warehouseService.findWarehouseById(id);
+        warehouseService.updateWarehouse(ware, warehouse);
+        warehouseRepo.save(ware);
+        return "redirect:/warehouses/";
     }
 }

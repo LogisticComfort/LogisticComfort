@@ -74,7 +74,14 @@
                             <td><a th:href="@{/warehouses/{id}(id=${warehouse.getId()})}">
                                 Посмотреть информацию / изменить данные
                             </a></td>
-
+                            <br>
+                            <br>
+                            <td><a th:href="@{/warehouses/ware_update/{id}(id=${warehouse.getId()})}">
+                                удалить склад
+                            </a></td>
+                            <div style="color: red" th:if="${error}">
+                                склад не пустой
+                            </div>
                         </tr>
 
                     </div>

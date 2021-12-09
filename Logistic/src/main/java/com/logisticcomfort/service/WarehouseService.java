@@ -30,4 +30,19 @@ public class WarehouseService {
         return warehouseRepo.findById(id);
     }
 
+    public void deleteWarehouse(long id) throws IllegalAccessException {
+        var warehouse = warehouseRepo.findById(id);
+        if (warehouse.getProducts().size() !=0) {
+            throw new IllegalAccessException("Warehouse is not empty");
+        }
+        warehouseRepo.deleteById(id);
+    }
+
+    public void updateWarehouse(Warehouse warehouse, Warehouse warehouseInfo) {
+        warehouse.setId(warehouseInfo.getId());
+        warehouse.setName(warehouseInfo.getName());
+        warehouse.setPhoneNumber(warehouseInfo.getPhoneNumber());
+        warehouse.setAddress(warehouseInfo.getAddress());
+        warehouse.setEmail(warehouseInfo.getEmail());
+    }
 }

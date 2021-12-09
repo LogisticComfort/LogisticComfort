@@ -63,4 +63,20 @@ public class UserService implements UserDetailsService {
     public void saveUser(User user){
         userRepo.saveAndFlush(user);
     }
+
+    public void deleteEmployee(long id) throws IllegalAccessException {
+        var user = findUserById(id);
+        if (user.getWarehouse().getUsers().size() <= 1) {
+            throw new IllegalAccessException("You only have one employee left.");
+        }
+        userRepo.deleteById(id);
+    }
+
+    public void updateEmployee(User userUpdate, User userInfo) {
+        userUpdate.setId(userInfo.getId());
+        userUpdate.setUsername(userInfo.getUsername());
+        userUpdate.setFullName(userInfo.getFullName());
+        userUpdate.setPassword(userInfo.getPassword());
+        userUpdate.setEmail(userInfo.getEmail());
+    }
 }
