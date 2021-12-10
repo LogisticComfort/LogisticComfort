@@ -64,11 +64,11 @@ public class UserService implements UserDetailsService {
         userRepo.saveAndFlush(user);
     }
 
-    public void deleteEmployee(long id) throws IllegalAccessException {
+    public void deleteEmployee(long id) {
         var user = findUserById(id);
-        if (user.getWarehouse().getUsers().size() <= 1) {
-            throw new IllegalAccessException("You only have one employee left.");
-        }
+//        if (user.getWarehouse().getUsers().size() == 0) {
+//            throw new IllegalAccessException("You only have one employee left.");
+//        }
         userRepo.deleteById(id);
     }
 

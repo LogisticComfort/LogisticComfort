@@ -55,10 +55,10 @@
                     <th>Описание</th>
                   </tr>
                   <tr>
-                    <td><p style="width: 50px"  th:text="${company.getId()}">VALUE</p></td>
-                    <td><p style="width: 100px" th:text="${company.getName()}">VALUE</p></td>
-                    <td><p style="width: 150px" th:text="${company.getPhoneNumber()}">VALUE</p></td>
-                    <td><p style="width: 150px" th:text="${company.getEmail()}">VALUE</p></td>
+                    <td><p style="width: 30px"  th:text="${company.getId()}">VALUE</p></td>
+                    <td><p style="width: 150px" th:text="${company.getName()}">VALUE</p></td>
+                    <td><p style="width: 165px" th:text="${company.getPhoneNumber()}">VALUE</p></td>
+                    <td><p style="width: 180px" th:text="${company.getEmail()}">VALUE</p></td>
                     <td><p style="width: 250px; height: auto" th:text="${company.getAddressMainOffice()}">VALUE</p></td>
                     <td><p style="width: 400px; height: auto" th:text="${company.getDescription()}"></p></td>
                   </tr>
@@ -89,5 +89,9 @@
       <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
       <script  th:src="@{/public/js/script.js}"></script>
 
+<!--      <td><a th:href="@{create/update_company/{id}(id=${companyUpdate.getId()})}">-->
+<!--        Изменить информацию о компании-->
+<!--      </a></td>-->
+      <a th:href="@{/update_company/{id}(id=${company.getId()})}">Изменить информацию о компании</a>
   </body>
 </html>

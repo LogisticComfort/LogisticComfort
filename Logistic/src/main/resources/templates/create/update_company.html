@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Update info about company</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" th:href="@{/public/css/create/company.css}">
+</head>
+<body>
+
+<div class="container contact-form">
+    <div class="contact-image">
+        <img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>
+    </div>
+    <form method="post" th:action="@{/update_company/{id}(id=${companyUpdate.getId()})}" th:object="${companyUpdate}">
+        <h3>Update your Company</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/>
+                    <input type="text" name="txtName" class="form-control" placeholder="Company Name *" value="" th:field="*{name}"/>
+                </div>
+                <div class="form-group">
+                    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"/>
+                    <input type="text" name="txtEmail" class="form-control" placeholder="Company Email *" value="" th:field="*{email}"/>
+                </div>
+                <div class="form-group">
+                    <div style="color: red" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"/>
+                    <input type="text" name="txtPhone" class="form-control" placeholder="Company Phone Number *" value="" th:field="*{phoneNumber}"/>
+                </div>
+                <div class="form-group">
+                    <div style="color: red" th:if="${#fields.hasErrors('addressMainOffice')}" th:errors="*{addressMainOffice}"/>
+                    <input type="text" name="txtAddress" class="form-control" placeholder="Address of the main office *" value="" th:field="*{addressMainOffice}"/>
+                </div>
+                <div class="form-group">
+                    <input type="submit" name="btnSubmit" class="btnContact" value="Обновить данные" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div style="color: red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"/>
+                    <textarea name="txtMsg" class="form-control" placeholder="Description of the company *" style="width: 100%; height: 150px;" th:field="*{description}"></textarea>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

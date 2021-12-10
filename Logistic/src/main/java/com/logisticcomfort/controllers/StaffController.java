@@ -22,11 +22,11 @@ import javax.validation.Valid;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class StaffController {
 
-    private UserService userService;
-    private WarehouseService warehouseService;
-    private WarehouseRepo warehouseRepo;
-    private UserRepo userRepo;
-    private Model modelPublic;
+    private final UserService userService;
+    private final WarehouseService warehouseService;
+    private final WarehouseRepo warehouseRepo;
+    private final UserRepo userRepo;
+    private  Model modelPublic;
 
     @Autowired
     public StaffController(UserService userService, WarehouseService warehouseService, WarehouseRepo warehouseRepo, UserRepo userRepo) {
@@ -84,12 +84,13 @@ public class StaffController {
             return "redirect:/staff/";
         }
         var deleteEmployee = userService.findUserById(id);
-        try {
-            userService.deleteEmployee(id);
-        } catch (Exception e) {
-            modelPublic = model.addAttribute("error", true);
-            System.out.println(e.getMessage());
-        }
+        userService.deleteEmployee(id);
+//        try {
+//            userService.deleteEmployee(id);
+//        } catch (Exception e) {
+//            modelPublic = model.addAttribute("error", true);
+//            System.out.println(e.getMessage());
+//        }
         return "redirect:/staff/";
     }
 
