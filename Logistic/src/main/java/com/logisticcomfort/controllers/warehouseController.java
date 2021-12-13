@@ -38,6 +38,14 @@ public class warehouseController {
     public String warehousesPage(@AuthenticationPrincipal User user, Model model){
         model.addAttribute("warehouses", userService.findAllWarehousesByUser(user));
         model.addAttribute("company", userService.findCompanyByUser(user));
+
+        try {
+            model.addAttribute("errorNotNull", modelPublic.getAttribute("errorNotNull"));
+            modelPublic = null;
+        }catch (Exception exception){
+            System.out.println("can not find errorNotNull attribute");
+        }
+
         return "warehouses";
     }
 
