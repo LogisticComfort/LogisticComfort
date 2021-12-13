@@ -7,6 +7,8 @@ import com.logisticcomfort.repos.CompanyRepo;
 import com.logisticcomfort.service.CompanyService;
 import com.logisticcomfort.service.UserService;
 import org.apache.catalina.Store;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,8 @@ import javax.validation.Valid;
 
 @Controller
 public class mainController {
+
+    private static final Logger LOG_MAIN_CONTROLLER = LoggerFactory.getLogger(mainController.class.getName());
 
     private final UserService userService;
     private final CompanyService companyService;
@@ -49,7 +53,8 @@ public class mainController {
                                         @AuthenticationPrincipal User user, Model model) {
 
         var company = userService.findCompanyByUser(user);
-        Long identity = companyService.findIdByCompany(company);
+        LOG_MAIN_CONTROLLER.info("update companyGet - company{}", company);
+
         model.addAttribute("companyUpdate", company);
         return "create/update_company";
     }
@@ -63,10 +68,14 @@ public class mainController {
         if (user.getRole() != Role.ADMIN) {
             return "index";
         }
+        LOG_MAIN_CONTROLLER.info("update companyPost - company{}", company);
 
         var companyUpdate = companyService.findById(id);
+        LOG_MAIN_CONTROLLER.info("update companyPost - company{}", companyUpdate);
+
         companyService.updateCompanyInfo(companyUpdate, company);
         companyRepo.save(companyUpdate);
+        LOG_MAIN_CONTROLLER.info("update company save - company{}", companyUpdate);
         return "redirect:/";
     }
 }

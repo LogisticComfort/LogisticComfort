@@ -7,6 +7,8 @@ import com.logisticcomfort.model.Warehouse;
 import com.logisticcomfort.repos.CompanyRepo;
 import com.logisticcomfort.repos.UserRepo;
 import com.logisticcomfort.repos.WarehouseRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +19,8 @@ import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
+
+    private static final Logger LOG_USER_SERVICE = LoggerFactory.getLogger(UserService.class.getName());
 
     private final UserRepo userRepo;
 
@@ -33,7 +37,12 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByUsername(username);
+        try {
+            return userRepo.findByUsername(username);
+        } catch (Exception e) {
+            LOG_USER_SERVICE.error("Username Not Found Exception", e);
+        }
+        return null;
     }
 
     public Company findCompanyByUser(User user){
@@ -71,7 +80,10 @@ public class UserService implements UserDetailsService {
 
     public void deleteEmployee(long id) throws Exception {
         var user = findUserById(id);
+        LOG_USER_SERVICE.info("user info - user{}", user);
         int numberUsers = user.getWarehouse().getUsers().size();
+        LOG_USER_SERVICE.info("User Role - Role{}", user.getRole());
+        LOG_USER_SERVICE.info("Warehouse is empty? - warehouse{}", user.getWarehouse());
         if ((user.getRole() == Role.ADMIN) || (user.getWarehouse() == null)) {
             if (numberUsers <= 1) {
                 throw new Exception("You only have one employee left.");

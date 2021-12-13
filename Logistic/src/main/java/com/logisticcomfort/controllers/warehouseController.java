@@ -6,6 +6,8 @@ import com.logisticcomfort.model.User;
 import com.logisticcomfort.model.Warehouse;
 import com.logisticcomfort.repos.WarehouseRepo;
 import com.logisticcomfort.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,8 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/warehouses")
 public class warehouseController {
+
+    private static final Logger LOG_WH_CONTROL = LoggerFactory.getLogger(warehouseController.class.getName());
 
     private final UserService userService;
     private final ProductService productService;
@@ -77,8 +81,10 @@ public class warehouseController {
                                 @RequestParam(value = "warehouse", required = false) long warehouseId,
                                 @AuthenticationPrincipal User user, Model model){
 
-        if (user.getRole() != Role.ADMIN)
+        LOG_WH_CONTROL.info("User Role - Role{}", user.getRole());
+        if (user.getRole() != Role.ADMIN) {
             return "redirect:/warehouses/" + String.valueOf(warehouseId);
+        }
 
         try {
             productService.deleteProduct(id);
@@ -93,6 +99,8 @@ public class warehouseController {
         @GetMapping("/ware_delete/{id}")
     public String deleteWarehouse(@PathVariable(value = "id", required = false) long id,
                                   @AuthenticationPrincipal User user, Model model) {
+
+        LOG_WH_CONTROL.info("User Role - Role{}", user.getRole());
         if (user.getRole() != Role.ADMIN) {
             return "redirect:/warehouses/";
         }
@@ -110,21 +118,28 @@ public class warehouseController {
                                  @AuthenticationPrincipal User user, Model model) {
 
         var warehouse = warehouseService.findWarehouseById(id);
+        LOG_WH_CONTROL.info("warehouse Info - warehouse{}", warehouse);
         model.addAttribute("wareUpdate", warehouse);
         return "update_ware";
     }
 
     @PostMapping("/update_ware/{id}")
     public String updateWare(@PathVariable(value = "id", required = false) long id,
-                             @ModelAttribute("wareUpdate") @Valid Warehouse warehouse,
+                             @ModelAttribute("wareUpdate") @Valid Warehouse wareInfo,
                              @AuthenticationPrincipal User user) {
 
+        LOG_WH_CONTROL.info("User Role - Role{}", user.getRole());
         if (user.getRole() != Role.ADMIN) {
             return "redirect:/warehouses/";
         }
 
+        LOG_WH_CONTROL.info("warehouse Info - warehouse{}", wareInfo);
+
         var ware = warehouseService.findWarehouseById(id);
-        warehouseService.updateWarehouse(ware, warehouse);
+        LOG_WH_CONTROL.info("warehouse Info - warehouse{}", ware);
+
+        warehouseService.updateWarehouse(ware, wareInfo);
+
         warehouseRepo.save(ware);
         return "redirect:/warehouses/";
     }

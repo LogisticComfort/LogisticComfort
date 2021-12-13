@@ -3,6 +3,8 @@ package com.logisticcomfort.service;
 import com.logisticcomfort.model.Company;
 import com.logisticcomfort.model.Warehouse;
 import com.logisticcomfort.repos.WarehouseRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import java.util.Set;
 @Service
 public class WarehouseService {
 
+    private static final Logger LOG_WH_SERVICE = LoggerFactory.getLogger(WarehouseService.class.getName());
     @Autowired
     private WarehouseRepo warehouseRepo;
 
@@ -30,13 +33,16 @@ public class WarehouseService {
         return warehouseRepo.findById(id);
     }
 
-    public void deleteWarehouse(long id) throws Exception {
+    public void deleteWarehouse(long id) {
         var warehouse = warehouseRepo.findById(id);
         if (warehouse.getProducts().size() != 0) {
-            throw new Exception("Склад не пустой");
+            try {
+                throw new Exception("Склад не пустой");
+            } catch (Exception e) {
+                LOG_WH_SERVICE.error("Склад не пустой", e);
+            }
         }
         warehouseRepo.deleteById(id);
-        return;
     }
 
     public void updateWarehouse(Warehouse warehouse, Warehouse warehouseInfo) {

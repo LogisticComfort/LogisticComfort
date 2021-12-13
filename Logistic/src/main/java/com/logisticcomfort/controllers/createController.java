@@ -175,7 +175,7 @@ public class createController {
         }
 
         userRepo.saveAndFlush(user);
-
+        LOG_CREATE.info("user save - user{}", user);
         return "redirect:/staff";
     }
 }

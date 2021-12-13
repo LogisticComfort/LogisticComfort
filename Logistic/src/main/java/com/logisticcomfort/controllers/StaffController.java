@@ -7,6 +7,8 @@ import com.logisticcomfort.repos.UserRepo;
 import com.logisticcomfort.repos.WarehouseRepo;
 import com.logisticcomfort.service.UserService;
 import com.logisticcomfort.service.WarehouseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,10 +24,13 @@ import javax.validation.Valid;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class StaffController {
 
+    private static final Logger LOG_STAFF = LoggerFactory.getLogger(StaffController.class.getName());
+
     private final UserService userService;
     private final WarehouseService warehouseService;
     private final WarehouseRepo warehouseRepo;
     private final UserRepo userRepo;
+
     private  Model modelPublic;
 
     @Autowired
@@ -50,6 +55,7 @@ public class StaffController {
     @GetMapping("/show_employee/{id}")
     public String showEmployee(@PathVariable("id") long id, @AuthenticationPrincipal User user , Model model){
         var company = userService.getCompany(user);
+        LOG_STAFF.info("Company info - company{}", company);
         model.addAttribute("company", company);
         model.addAttribute("warehouses", warehouseService.findAllWarehousesByCompany(company));
         model.addAttribute("employee", userService.findUserById(id));
@@ -65,8 +71,9 @@ public class StaffController {
                                Model model){
 
         var user = userService.findUserById(id);
+        LOG_STAFF.info("user INFO - user{}", user);
         user.editRole(role);
-
+        LOG_STAFF.info("warehouseId is - warehouseId{}", warehouseId);
         if(warehouseId != null && warehouseId >= 0){
             user.setWarehouse(warehouseRepo.findById((long)warehouseId));
         }else{
@@ -74,27 +81,24 @@ public class StaffController {
         }
 
         userRepo.saveAndFlush(user);
+        LOG_STAFF.info("user save - user{}", user);
         return "redirect:/staff/show_employee/" + String.valueOf(id);
     }
 
     @GetMapping("/employee_delete/{id}")
     public String deleteEmployee(@PathVariable(value = "id", required = false) long id,
                                  @AuthenticationPrincipal User user, Model model) {
+        LOG_STAFF.info("user ROLE - Role{}", user.getRole());
         if (user.getRole() != Role.ADMIN) {
             return "redirect:/staff/";
         }
-        var deleteEmployee = userService.findUserById(id);
+
         try {
             userService.deleteEmployee(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        try {
-//            userService.deleteEmployee(id);
-//        } catch (Exception e) {
-//            modelPublic = model.addAttribute("error", true);
-//            System.out.println(e.getMessage());
-//        }
+
         return "redirect:/staff/";
     }
 
@@ -102,6 +106,7 @@ public class StaffController {
     public String updateEmpForm(@PathVariable(value = "id", required = false) long id,
                                  @AuthenticationPrincipal User user, Model model) {
         var userInfo = userService.findUserById(id);
+        LOG_STAFF.info("user INFO - user{}", userInfo);
         model.addAttribute("empUpdate", userInfo);
         return "update_employee";
     }
@@ -111,12 +116,14 @@ public class StaffController {
                              @ModelAttribute("empUpdate") @Valid User UserInfo,
                              BindingResult bindingResult,
                              @AuthenticationPrincipal User user) {
-
+        LOG_STAFF.info("user ROLE - Role{}", user.getRole());
         if (user.getRole() != Role.ADMIN) {
             return "redirect:/warehouses/";
         }
 
+        LOG_STAFF.info("user INFO - user{}", UserInfo);
         var userUpdate = userService.findUserById(id);
+        LOG_STAFF.info("user INFO - user{}", userUpdate);
         userService.updateEmployee(userUpdate, UserInfo);
         userRepo.save(userUpdate);
         return "redirect:/staff/";
