@@ -30,12 +30,13 @@ public class WarehouseService {
         return warehouseRepo.findById(id);
     }
 
-    public void deleteWarehouse(long id) throws IllegalAccessException {
+    public void deleteWarehouse(long id) throws Exception {
         var warehouse = warehouseRepo.findById(id);
-        if (warehouse.getProducts().size() !=0) {
-            throw new IllegalAccessException("Warehouse is not empty");
+        if (warehouse.getProducts().size() != 0) {
+            throw new Exception("Склад не пустой");
         }
         warehouseRepo.deleteById(id);
+        return;
     }
 
     public void updateWarehouse(Warehouse warehouse, Warehouse warehouseInfo) {

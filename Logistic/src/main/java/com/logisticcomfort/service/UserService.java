@@ -1,6 +1,7 @@
 package com.logisticcomfort.service;
 
 import com.logisticcomfort.model.Company;
+import com.logisticcomfort.model.Role;
 import com.logisticcomfort.model.User;
 import com.logisticcomfort.model.Warehouse;
 import com.logisticcomfort.repos.CompanyRepo;
@@ -17,14 +18,18 @@ import java.util.Set;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
+
+    private final CompanyRepo companyRepo;
+
+    private final WarehouseRepo warehouseRepo;
 
     @Autowired
-    private CompanyRepo companyRepo;
-
-    @Autowired
-    private WarehouseRepo warehouseRepo;
+    public UserService(UserRepo userRepo, CompanyRepo companyRepo, WarehouseRepo warehouseRepo) {
+        this.userRepo = userRepo;
+        this.companyRepo = companyRepo;
+        this.warehouseRepo = warehouseRepo;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -64,12 +69,18 @@ public class UserService implements UserDetailsService {
         userRepo.saveAndFlush(user);
     }
 
-    public void deleteEmployee(long id) {
+    public void deleteEmployee(long id) throws Exception {
         var user = findUserById(id);
-//        if (user.getWarehouse().getUsers().size() == 0) {
-//            throw new IllegalAccessException("You only have one employee left.");
-//        }
-        userRepo.deleteById(id);
+        int numberUsers = user.getWarehouse().getUsers().size();
+        if ((user.getRole() == Role.ADMIN) || (user.getWarehouse() == null)) {
+            if (numberUsers <= 1) {
+                throw new Exception("You only have one employee left.");
+            } else {
+                userRepo.deleteById(id);
+            }
+        } else {
+            userRepo.deleteById(id);
+        }
     }
 
     public void updateEmployee(User userUpdate, User userInfo) {

@@ -79,15 +79,14 @@
                                 <a th:href="@{/warehouses/ware_delete/{id}(id=${warehouse.getId()})}">
                                     удалить склад
                                 </a>
-
                             </td>
-<!--                            <div style="color: red" th:if="${error}">-->
-<!--                                склад не пустой-->
-<!--                            </div>-->
                         </tr>
-
+                    </div>
+                    <div style="color: red; font-size: 30px;" th:if="${errorNotNull}">
+                        Склад не пустой
                     </div>
                 </table>
+
                 <a class="btn btn-primary" href="create/warehouse" role="button">Добавление нового склада</a>
             </div>
           </div>

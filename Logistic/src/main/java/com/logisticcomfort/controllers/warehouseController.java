@@ -27,11 +27,11 @@ public class warehouseController {
     private Model modelPublic;
 
     @Autowired
-    public warehouseController(UserService userService, ProductService productService, WarehouseRepo warehouseRepo, WarehouseService warehouseService, WarehouseService warehouseService1) {
+    public warehouseController(UserService userService, ProductService productService, WarehouseRepo warehouseRepo, WarehouseService warehouseService) {
         this.userService = userService;
         this.productService = productService;
         this.warehouseRepo = warehouseRepo;
-        this.warehouseService = warehouseService1;
+        this.warehouseService = warehouseService;
     }
 
     @GetMapping()
@@ -63,10 +63,11 @@ public class warehouseController {
         return "productShow";
     }
 
+
     @RequestMapping("/delete/product")
-      public String DeleteProduct(@RequestParam(value = "id", required = false) long id,
-                                  @RequestParam(value = "warehouse", required = false) long warehouseId,
-                                  @AuthenticationPrincipal User user, Model model){
+    public String DeleteProduct(@RequestParam(value = "id", required = false) long id,
+                                @RequestParam(value = "warehouse", required = false) long warehouseId,
+                                @AuthenticationPrincipal User user, Model model){
 
         if (user.getRole() != Role.ADMIN)
             return "redirect:/warehouses/" + String.valueOf(warehouseId);
@@ -81,26 +82,25 @@ public class warehouseController {
         return "redirect:/warehouses/" + String.valueOf(warehouseId);
     }
 
-    @GetMapping("/ware_delete/{id}")
+        @GetMapping("/ware_delete/{id}")
     public String deleteWarehouse(@PathVariable(value = "id", required = false) long id,
                                   @AuthenticationPrincipal User user, Model model) {
         if (user.getRole() != Role.ADMIN) {
             return "redirect:/warehouses/";
         }
-
-
-        try {
-            warehouseService.deleteWarehouse(id);
-        } catch (Exception e) {
-            modelPublic = model.addAttribute("error", true);
-            System.out.println(e.getMessage());
-        }
-        return "redirect:/warehouses/";
+            try {
+                warehouseService.deleteWarehouse(id);
+            } catch (Exception exception){
+                modelPublic = model.addAttribute("errorNotNull", true);
+                System.out.println(exception.getMessage());
+            }
+            return "redirect:/warehouses/";
     }
 
     @GetMapping("/update_ware/{id}")
     public String updateWareForm(@PathVariable(value = "id", required = false) long id,
                                  @AuthenticationPrincipal User user, Model model) {
+
         var warehouse = warehouseService.findWarehouseById(id);
         model.addAttribute("wareUpdate", warehouse);
         return "update_ware";
@@ -109,7 +109,6 @@ public class warehouseController {
     @PostMapping("/update_ware/{id}")
     public String updateWare(@PathVariable(value = "id", required = false) long id,
                              @ModelAttribute("wareUpdate") @Valid Warehouse warehouse,
-                             BindingResult bindingResult,
                              @AuthenticationPrincipal User user) {
 
         if (user.getRole() != Role.ADMIN) {

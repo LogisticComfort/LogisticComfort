@@ -84,7 +84,11 @@ public class StaffController {
             return "redirect:/staff/";
         }
         var deleteEmployee = userService.findUserById(id);
-        userService.deleteEmployee(id);
+        try {
+            userService.deleteEmployee(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //        try {
 //            userService.deleteEmployee(id);
 //        } catch (Exception e) {
@@ -103,7 +107,7 @@ public class StaffController {
     }
 
     @PostMapping("/update_employee/{id}")
-    public String updateWare(@PathVariable(value = "id", required = false) long id,
+    public String updateEmp(@PathVariable(value = "id", required = false) long id,
                              @ModelAttribute("empUpdate") @Valid User UserInfo,
                              BindingResult bindingResult,
                              @AuthenticationPrincipal User user) {
