@@ -38,11 +38,16 @@ public class WarehousesHandler {
         var user = telegramService.findUserByChatId(chatId).getUser();
         var inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
-        switch (user.getRole()){
+        var role = user.getRole();
+        switch (role){
             case ADMIN:
                 inlineKeyboardMarkup = warehousesForAdmin(chatId, user, callBackCode);
-            case USER:
+                break;
+            case USER: {
                 inlineKeyboardMarkup = warehousesForUser(chatId, user, callBackCode);
+                break;
+            }
+
         }
 
         var sendMessage = new SendMessage();

@@ -292,7 +292,7 @@ public class PersonalHandler {
         historyMessage.setMessage(historyMessage.getMessage() + " " + text);
         telegramService.saveHistoryMessage(historyMessage);
 
-        var sendMessage = new SendMessage(String.valueOf(chatId), "Введите пожалуйста email для пользователя: ");
+        var sendMessage = new SendMessage(String.valueOf(chatId), "Выберете пожалуйста role для пользователя: ");
         List<List<InlineKeyboardButton>> keyboardButtons = new ArrayList<>();
         for (var role: Role.values()) {
             var inlineKeyboardRow = List.of(
@@ -313,7 +313,7 @@ public class PersonalHandler {
         historyMessage.setMessage(historyMessage.getMessage() + " " + text.split(" ")[1]);
         telegramService.saveHistoryMessage(historyMessage);
 
-        var sendMessage = new SendMessage(String.valueOf(chatId), "Введите пожалуйста email для пользователя: ");
+        var sendMessage = new SendMessage(String.valueOf(chatId), "Выберете пожалуйста warehouse для пользователя: ");
         List<List<InlineKeyboardButton>> keyboardButtons = new ArrayList<>();
         for (var warehouse: company.getWarehouses()) {
             var inlineKeyboardRow = List.of(
