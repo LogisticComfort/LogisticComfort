@@ -121,11 +121,11 @@
                         <div th:each="worker, iter : ${staff} ">
                             <tr th:object="${worker}">
                                 <td><p style="width: 50px"  th:text="${iter.index + 1}">VALUE</p></td>
-                                <td><p style="width: 150px" th:text="*{fullName}" >VALUE</p></td>
+                                <td><p style="width: 200px" th:text="*{fullName}" >VALUE</p></td>
                                 <td><p style="width: 100px" th:text="*{username}" >VALUE</p></td>
                                 <td><p style="width: 150px" th:text="*{password}">VALUE</p></td>
                                 <td><p style="width: 200px" th:text="*{email}">VALUE</p></td>
-                                <td><p th:text="${worker.getRole()}">VALUE</p></td>
+                                <td><p style="width: 100px" th:text="${worker.getRole()}">VALUE</p></td>
                                 <td><p th:if="*{warehouse != null}" th:text="*{warehouse.getName()}">VALUE</p></td>
                                 <td>
                                     <a th:href="@{/staff/show_employee/{id}(id=${worker.getId()})}">
@@ -136,6 +136,9 @@
                                     удалить работника
                                 </a></td>
                             </tr>
+                        </div>
+                        <div style="color: #051841; font-size: 30px;" th:if="${errorNotNull}">
+                            Нельзя удалить администратора, если он один
                         </div>
                     </table>
                     <br>

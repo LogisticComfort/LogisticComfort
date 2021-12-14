@@ -108,7 +108,8 @@ public class warehouseController {
                 warehouseService.deleteWarehouse(id);
             } catch (Exception exception){
                 modelPublic = model.addAttribute("errorNotNull", true);
-                System.out.println(exception.getMessage());
+                LOG_WH_CONTROL.info("info about modelPublic - modelPublic{}", modelPublic);
+                LOG_WH_CONTROL.error("warehouse deletion error", exception);
             }
             return "redirect:/warehouses/";
     }

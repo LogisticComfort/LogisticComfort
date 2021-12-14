@@ -48,7 +48,12 @@ public class StaffController {
         model.addAttribute("employee", new User());
         model.addAttribute("company", company);
         model.addAttribute("warehouses", warehouseService.findAllWarehousesByCompany(company));
-
+        try {
+            model.addAttribute("errorNotNull", modelPublic.getAttribute("errorNotNull"));
+            modelPublic = null;
+        }catch (Exception exception){
+            System.out.println("can not find errorNotNull attribute");
+        }
         return "staff/staff_panel";
     }
 
@@ -96,7 +101,9 @@ public class StaffController {
         try {
             userService.deleteEmployee(id);
         } catch (Exception e) {
-            e.printStackTrace();
+            modelPublic = model.addAttribute("errorNotNull", true);
+            LOG_STAFF.info("info about modelPublic - modelPublic{}", modelPublic);
+            LOG_STAFF.error("employee deletion error", e);
         }
 
         return "redirect:/staff/";
