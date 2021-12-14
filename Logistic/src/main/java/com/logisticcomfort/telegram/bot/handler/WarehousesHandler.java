@@ -41,6 +41,8 @@ public class WarehousesHandler {
         switch (user.getRole()){
             case ADMIN:
                 inlineKeyboardMarkup = warehousesForAdmin(chatId, user, callBackCode);
+            case USER:
+                inlineKeyboardMarkup = warehousesForUser(chatId, user, callBackCode);
         }
 
         var sendMessage = new SendMessage();
@@ -68,6 +70,27 @@ public class WarehousesHandler {
             ));
             keyboardButtons.add(keyboardButtonsRow);
         }
+
+        inlineKeyboardMarkup.setKeyboard(keyboardButtons);
+
+        return inlineKeyboardMarkup;
+    }
+
+    private static InlineKeyboardMarkup warehousesForUser(Long chatId, User user, String callBackCode){
+        var warehouse = user.getWarehouse();
+
+        var inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboardButtons = new ArrayList<>();
+
+
+        var button = new InlineKeyboardButton();
+        button.setText(warehouse.getName());
+        button.setCallbackData(callBackCode + " " + warehouse.getCompany().getName() + " " + warehouse.getId());
+        List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>(List.of(
+                button
+        ));
+        keyboardButtons.add(keyboardButtonsRow);
+
 
         inlineKeyboardMarkup.setKeyboard(keyboardButtons);
 

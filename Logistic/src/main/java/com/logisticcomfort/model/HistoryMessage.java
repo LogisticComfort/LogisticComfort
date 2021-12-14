@@ -47,4 +47,12 @@ public class HistoryMessage {
     public void setTelegramUser(TelegramUser telegramUser) {
         this.telegramUser = telegramUser;
     }
+
+    @Override
+    public String toString() {
+        return "HistoryMessage{" +
+                "id=" + id +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }

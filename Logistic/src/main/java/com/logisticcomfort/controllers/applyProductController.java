@@ -5,6 +5,8 @@ import com.logisticcomfort.repos.ApplyProductRepo;
 import com.logisticcomfort.repos.CompanyRepo;
 import com.logisticcomfort.repos.WarehouseRepo;
 import com.logisticcomfort.service.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +20,8 @@ import javax.validation.Valid;
 @RequestMapping("/apply_products")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class applyProductController {
+
+    static  final Logger LAPPLY = LoggerFactory.getLogger(applyProductController.class.getName());
 
     private final ProductService productService;
     private final ApplyProductRepo applyProductRepo;
@@ -39,7 +43,8 @@ public class applyProductController {
         model.addAttribute("company", company);
 //        model.addAttribute("applyProducts", productService.findAllApplyProductsByCompany(company));
         model.addAttribute("applyProducts", productService.findAllByCompanyOrderByIdDesc(company));
-
+        LAPPLY.info("GetMapping - showApplyProducts - model{}",
+                model);
         return "show_apply_products";
     }
 
@@ -49,7 +54,7 @@ public class applyProductController {
         var product = applyProductRepo.findById(id);
         product.setStatus(applyProduct.getStatus());
         applyProductRepo.save(product);
-
+        LAPPLY.info("PostMapping - showApplyProducts - product:{}", product);
         if (product.getStatus() == StatusProduct.AllOWED){
             var warehouse = warehouseRepo.findById((long)product.getWarehousesId());
             var productNew = new Product(product.getName(), product.getAmountAdd(), product.getVendorCode(), warehouse);

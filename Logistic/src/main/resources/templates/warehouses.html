@@ -71,14 +71,22 @@
                             <td><p style="width: 150px" th:text="${warehouse.getPhoneNumber()}">VALUE</p></td>
                             <td><p style="width: 150px" th:text="${warehouse.getEmail()}">VALUE</p></td>
                             <td><p style="width: 150px" th:text="${warehouse.getAddress()}">VALUE</p></td>
-                            <td><a th:href="@{/warehouses/{id}(id=${warehouse.getId()})}">
+                            <td>
+                                <a th:href="@{/warehouses/{id}(id=${warehouse.getId()})}" style="width: 400px">
                                 Посмотреть информацию / изменить данные
-                            </a></td>
-
+                                </a>
+                                <br>
+                                <a th:href="@{/warehouses/ware_delete/{id}(id=${warehouse.getId()})}">
+                                    удалить склад
+                                </a>
+                            </td>
                         </tr>
-
+                    </div>
+                    <div style="color: red; font-size: 30px;" th:if="${errorNotNull}">
+                        Склад не пустой
                     </div>
                 </table>
+
                 <a class="btn btn-primary" href="create/warehouse" role="button">Добавление нового склада</a>
             </div>
           </div>

@@ -41,10 +41,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne (optional=true, fetch = FetchType.EAGER)
     private Company company;
 
-    @ManyToOne (optional=true, cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne (optional=true, fetch = FetchType.EAGER)
     private Warehouse warehouse;
 
     @OneToOne(mappedBy="user", fetch = FetchType.LAZY)
@@ -163,5 +163,17 @@ public class User implements UserDetails {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", password='" + password + '\'' +
+                ", active=" + active +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

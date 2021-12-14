@@ -66,8 +66,8 @@
                             <tr th:object="${employee}">
                                 <td><p style="width: 100px" th:text="*{username}" >VALUE</p></td>
                                 <td><p style="width: 150px" th:text="*{password}">VALUE</p></td>
-                                <td><p style="width: 150px" th:text="*{email}">VALUE</p></td>
-                                <td><p th:text="${employee.getRole()}">VALUE</p></td>
+                                <td><p style="width: 200px" th:text="*{email}">VALUE</p></td>
+                                <td><p style="width: 70px" th:text="${employee.getRole()}">VALUE</p></td>
                                 <td><p th:if="*{warehouse != null}" th:text="*{warehouse.getName()}">VALUE</p></td>
                             </tr>
                         </div>
@@ -98,6 +98,9 @@
                         <div class="form-group">
                             <input type="submit" name="btnSubmit" class="btnContact" value="Добавить работника" />
                         </div>
+                        <td><a th:href="@{/staff/update_employee/{id}(id=${employee.getId()})}">
+                            Изменить данные о работнике
+                        </a></td>
                     </form>
                 </div>
             </div>
