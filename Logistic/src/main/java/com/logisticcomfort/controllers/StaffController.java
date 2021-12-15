@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,15 +31,19 @@ public class StaffController {
     private final WarehouseService warehouseService;
     private final WarehouseRepo warehouseRepo;
     private final UserRepo userRepo;
+    private final PasswordEncoder passwordEncoder;
 
     private  Model modelPublic;
 
     @Autowired
-    public StaffController(UserService userService, WarehouseService warehouseService, WarehouseRepo warehouseRepo, UserRepo userRepo) {
+    public StaffController(UserService userService, WarehouseService warehouseService,
+                           WarehouseRepo warehouseRepo, UserRepo userRepo,
+                           PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.warehouseService = warehouseService;
         this.warehouseRepo = warehouseRepo;
         this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping()
@@ -129,7 +134,7 @@ public class StaffController {
 
     @PostMapping("/update_employee/{id}")
     public String updateEmp(@PathVariable(value = "id", required = false) long id,
-                             @ModelAttribute("empUpdate") @Valid User UserInfo,
+                             @ModelAttribute("empUpdate") @Valid User userInfo,
                              BindingResult bindingResult,
                              @AuthenticationPrincipal User user) {
         LOG_STAFF.info("user ROLE - Role{}", user.getRole());
@@ -137,10 +142,11 @@ public class StaffController {
             return "redirect:/warehouses/";
         }
 
-        LOG_STAFF.info("user INFO - user{}", UserInfo);
+        LOG_STAFF.info("user INFO - user{}", userInfo);
         var userUpdate = userService.findUserById(id);
         LOG_STAFF.info("user INFO - user{}", userUpdate);
-        userService.updateEmployee(userUpdate, UserInfo);
+        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+        userService.updateEmployee(userUpdate, userInfo);
         userRepo.save(userUpdate);
         return "redirect:/staff/";
     }

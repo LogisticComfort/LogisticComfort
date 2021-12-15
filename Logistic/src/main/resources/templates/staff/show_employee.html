@@ -55,7 +55,6 @@
                     <table style="border-collapse: collapse">
                         <tr>
                             <th>Имя</th>
-                            <th>Пароль</th>
                             <th>Email</th>
                             <th>Роль</th>
                             <th>Склад</th>
@@ -65,7 +64,6 @@
                             <tr>
                             <tr th:object="${employee}">
                                 <td><p style="width: 100px" th:text="*{username}" >VALUE</p></td>
-                                <td><p style="width: 150px" th:text="*{password}">VALUE</p></td>
                                 <td><p style="width: 200px" th:text="*{email}">VALUE</p></td>
                                 <td><p style="width: 70px" th:text="${employee.getRole()}">VALUE</p></td>
                                 <td><p th:if="*{warehouse != null}" th:text="*{warehouse.getName()}">VALUE</p></td>
@@ -96,7 +94,7 @@
                         </div>
 
                         <div class="form-group">
-                            <input type="submit" name="btnSubmit" class="btnContact" value="Добавить работника" />
+                            <input type="submit" name="btnSubmit" class="btnContact" value="Изменить склад или роль у работника" />
                         </div>
                         <td><a th:href="@{/staff/update_employee/{id}(id=${employee.getId()})}">
                             Изменить данные о работнике
