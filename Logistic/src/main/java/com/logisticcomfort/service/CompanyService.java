@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class CompanyService {
 
@@ -40,6 +42,14 @@ public class CompanyService {
 
     public Long findIdByCompany(Company company) {
         return company.getId();
+    }
+
+    public ArrayList<Company> findAllCompanies(){
+        return companyRepo.findAll();
+    }
+
+    public void saveCompany(Company company){
+        companyRepo.save(company);
     }
 
 }

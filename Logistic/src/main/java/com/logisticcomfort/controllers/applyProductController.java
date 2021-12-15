@@ -40,6 +40,9 @@ public class applyProductController {
     public String showApplyProducts(@AuthenticationPrincipal User user, Model model){
         var company =  companyRepo.findById((long)user.getCompany().getId());
 
+        if (!company.isActive())
+            return "redirect:/";
+
         model.addAttribute("company", company);
 //        model.addAttribute("applyProducts", productService.findAllApplyProductsByCompany(company));
         model.addAttribute("applyProducts", productService.findAllByCompanyOrderByIdDesc(company));
@@ -50,7 +53,6 @@ public class applyProductController {
 
     @PostMapping("/edit/{id}")//(Вопрос: почему полностью объект не передается)
     public String showApplyProducts(@PathVariable("id") long id, @Valid ApplyProduct applyProduct, Model model){
-
         var product = applyProductRepo.findById(id);
         product.setStatus(applyProduct.getStatus());
         applyProductRepo.save(product);

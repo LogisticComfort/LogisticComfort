@@ -44,6 +44,8 @@ public class StaffController {
     @GetMapping()
     public String staffShow(@AuthenticationPrincipal User user, Model model){
         var company = userService.getCompany(user);
+        if (!user.getCompany().isActive())
+            return "redirect:/";
         model.addAttribute("staff", userService.findAllByCompanyOrderByIdAsc(user));
         model.addAttribute("employee", new User());
         model.addAttribute("company", company);
@@ -60,6 +62,8 @@ public class StaffController {
     @GetMapping("/show_employee/{id}")
     public String showEmployee(@PathVariable("id") long id, @AuthenticationPrincipal User user , Model model){
         var company = userService.getCompany(user);
+        if (!user.getCompany().isActive())
+            return "redirect:/";
         LOG_STAFF.info("Company info - company{}", company);
         model.addAttribute("company", company);
         model.addAttribute("warehouses", warehouseService.findAllWarehousesByCompany(company));
@@ -94,6 +98,9 @@ public class StaffController {
     public String deleteEmployee(@PathVariable(value = "id", required = false) long id,
                                  @AuthenticationPrincipal User user, Model model) {
         LOG_STAFF.info("user ROLE - Role{}", user.getRole());
+
+        if (!user.getCompany().isActive())
+            return "redirect:/";
         if (user.getRole() != Role.ADMIN) {
             return "redirect:/staff/";
         }
@@ -112,6 +119,8 @@ public class StaffController {
     @GetMapping("/update_employee/{id}")
     public String updateEmpForm(@PathVariable(value = "id", required = false) long id,
                                  @AuthenticationPrincipal User user, Model model) {
+        if (!user.getCompany().isActive())
+            return "redirect:/";
         var userInfo = userService.findUserById(id);
         LOG_STAFF.info("user INFO - user{}", userInfo);
         model.addAttribute("empUpdate", userInfo);

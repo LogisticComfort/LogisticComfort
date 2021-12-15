@@ -28,10 +28,12 @@ public class User implements UserDetails {
     private String fullName;
 
     @NotEmpty(message = "Password should not be empty")
-    @Size(min = 3, max = 30, message = "Password be between 3 and 30 characters")
+    @Size(min = 3, message = "Password be more than 3 characters")
     private String password;
 
     private boolean active;
+
+    private boolean programmer;
 
     @Email(message = "Email should be valid")
     private String email;
@@ -163,6 +165,14 @@ public class User implements UserDetails {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public boolean isProgrammer() {
+        return programmer;
+    }
+
+    public void setProgrammer(boolean programmer) {
+        this.programmer = false;
     }
 
     @Override

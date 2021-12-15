@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,7 @@ public class createController {
     private final ProductService productRepo;
     private final UserService userService;
     private final WarehouseService warehouseService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public createController(CompanyRepo companyRepo,
@@ -37,7 +39,8 @@ public class createController {
                             ProductService productService,
                             ProductService productRepo,
                             UserService userService,
-                            WarehouseService warehouseService) {
+                            WarehouseService warehouseService,
+                            PasswordEncoder passwordEncoder) {
         this.companyRepo = companyRepo;
         this.userRepo = userRepo;
         this.warehouseRepo = warehouseRepo;
@@ -45,6 +48,7 @@ public class createController {
         this.productRepo = productRepo;
         this.userService = userService;
         this.warehouseService = warehouseService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/company")
@@ -68,6 +72,8 @@ public class createController {
             LOG_CREATE.error("Company creation error");
             return "create/company";
         }
+
+        company.setActive(false);
 
         if (user.getCompany() != null) {
 
@@ -174,6 +180,7 @@ public class createController {
             user.setWarehouse(warehouseRepo.findById((long)warehouseId));
         }
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.saveAndFlush(user);
         LOG_CREATE.info("user save - user{}", user);
         return "redirect:/staff";

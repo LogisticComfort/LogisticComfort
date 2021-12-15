@@ -7,6 +7,7 @@ import com.logisticcomfort.repos.HistoryMessageRepo;
 import com.logisticcomfort.service.TelegramService;
 import com.logisticcomfort.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
@@ -14,11 +15,13 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 public class AuthenticationHandler {
     private static TelegramService telegramService;
     private static UserService userService;
+    private static PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthenticationHandler(TelegramService telegramService, UserService userService) {
+    public AuthenticationHandler(TelegramService telegramService, UserService userService, PasswordEncoder passwordEncoder) {
         this.telegramService = telegramService;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public static SendMessage authentication(Long chatId){
@@ -78,7 +81,7 @@ public class AuthenticationHandler {
                 return new SendMessage(String.valueOf(chatId), "Такого пользователя не существует");
             }
 
-            if (!user.getPassword().equals(text)){
+            if (!passwordEncoder.matches(text, user.getPassword())){
                 return new SendMessage(String.valueOf(chatId), String.format("Введите свой пароль от аккаунта %s: ", username));
             }
 

@@ -12,9 +12,8 @@ import com.logisticcomfort.service.WarehouseService;
 import com.logisticcomfort.telegram.bot.Bot;
 import com.logisticcomfort.telegram.bot.InlKeyboardButton;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.interfaces.BotApiObject;
-import org.telegram.telegrambots.meta.api.interfaces.Validable;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -27,8 +26,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.logisticcomfort.model.StatusProduct.EXPECTS;
-
 @Component
 public class PersonalHandler {
 
@@ -37,19 +34,22 @@ public class PersonalHandler {
     private static WarehouseService warehouseService;
     private static ProductService productService;
     private static CompanyRepo companyRepo;
+    private static PasswordEncoder passwordEncoder;
 
     private static Bot bot;
 
     @Autowired
     public PersonalHandler(TelegramService telegramService, UserService userService,
                            WarehouseService warehouseService, ProductService productService,
-                           CompanyRepo companyRepo, Bot bot) {
+                           CompanyRepo companyRepo, Bot bot,
+                           PasswordEncoder passwordEncoder) {
         this.telegramService = telegramService;
         this.userService = userService;
         this.warehouseService = warehouseService;
         this.productService = productService;
         this.companyRepo = companyRepo;
         this.bot = bot;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -335,7 +335,7 @@ public class PersonalHandler {
         try {
             user.setUsername(array[1]);
             user.setFullName(array[2]);
-            user.setPassword(array[3]);
+            user.setPassword(passwordEncoder.encode(array[3]));
             user.setEmail(array[4]);
             user.editRole(Role.valueOf(array[5]));
             user.setWarehouse(warehouseService.findWarehouseById(Long.parseLong(text.split(" ")[1])));

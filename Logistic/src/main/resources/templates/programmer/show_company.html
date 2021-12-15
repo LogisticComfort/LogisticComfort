@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Show Company</title>
+
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+    <link rel="stylesheet" th:href="@{/public/css/nav_bar.css}">
+</head>
+    <body>
+
+        <!-- partial:index.partial.html -->
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#resNav">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="resNav">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/">Home</a></li>
+                    <li>
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="btn btn-lg btn-primary">Выход</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>  <!-- End of Navigation Bar -->
+
+        <!-- Jumbotron -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="jumbotron">
+                        <h1 th:text="'Компания: ' + ${company.getName()}"></h1>
+                    </div>
+                </div>
+            </div>
+        </div>  <!-- End of Jumbotron -->
+
+        <!-- Simple Article -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <table style="border-collapse: collapse">
+                        <tr>
+                            <th>idCompany</th>
+                            <th>Название компании</th>
+                            <th>Количество сотрудников</th>
+                            <th>Адрес</th>
+                            <th>Телефон</th>
+                            <th>Статус</th>
+                        </tr>
+                        <div>
+                            <tr  th:object="${company}">
+                                <td><p style="width: 50px"  th:text="${company.getId()}">VALUE</p></td>
+                                <td><p style="width: 100px" th:text="${company.getName()}" th:value="*{name}">VALUE</p></td>
+                                <td><p style="width: 150px" th:text="${company.getAuthor().size()}" th:value="*{author.size()}">VALUE</p></td>
+                                <td><p style="width: 150px" th:text="${company.getAddressMainOffice()}" th:value="*{addressMainOffice}" >VALUE</p></td>
+                                <td><p style="width: 150px" th:text="${company.getPhoneNumber()}" th:value="*{phoneNumber}" >VALUE</p></td>
+                                <td><p style="width: 150px" th:text="${company.isActive()}">VALUE</p></td>
+                            </tr>
+                        </div>
+                    </table>
+                    <br>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <form method="post" th:action="@{/menu_for_programmers/company/edit(id=${company.getId()})}">
+                        <div class="form-group" >
+                            <label for="active" class="form-label">Изменить статус</label>
+                            <select name="active" id="active" >
+                                <option th:value="true" >active</option>
+                                <option th:value="false">dont active</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" name="btnSubmit" class="btnContact" value="Изменить данные" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>  <!-- End of Simple Article -->
+
+        <!-- partial -->
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+        <script  th:src="@{/public/js/script.js}"></script>
+
+    </body>
+</html>

@@ -51,6 +51,8 @@ public class mainController {
     @GetMapping("/update_company/{id}")
     public String updateCompanyInfoForm(@PathVariable(value = "id", required = false) Long id,
                                         @AuthenticationPrincipal User user, Model model) {
+        if (!user.getCompany().isActive())
+            return "redirect:/";
 
         var company = userService.findCompanyByUser(user);
         LOG_MAIN_CONTROLLER.info("update companyGet - company{}", company);
@@ -66,8 +68,9 @@ public class mainController {
                                     @AuthenticationPrincipal User user) {
 
         if (user.getRole() != Role.ADMIN) {
-            return "index";
+            return "redirect:/";
         }
+
         LOG_MAIN_CONTROLLER.info("update companyPost - company{}", company);
 
         var companyUpdate = companyService.findById(id);

@@ -157,6 +157,16 @@ public class Bot extends TelegramLongPollingBot {
             return sendMessage;
         }
 
+        if(text.equals(COMMANDS.SIGN_OUT.getCommand())){
+            return MainPageHandler.signOut(chatId);
+        }
+
+        if(!telegramService.findUserByChatId(chatId).getUser().getCompany().isActive()){
+            var sendMessage = MainPageHandler.signOut(chatId);
+            sendMessage.setText("Компания не активна. Введите данные заново");
+            return sendMessage;
+        }
+
         var role = telegramService.findUserByChatId(chatId).getUser().getRole();
         if(text.equals(COMMANDS.MAIN_PAGE.getCommand())){
             var sendMessage = MainPageHandler.showMenu(chatId, text);
@@ -180,9 +190,7 @@ public class Bot extends TelegramLongPollingBot {
             return PersonalHandler.initialPersonalPage(text,chatId);
         }
 
-        if(text.equals(COMMANDS.SIGN_OUT.getCommand())){
-            return MainPageHandler.signOut(chatId);
-        }
+
 
         if (text.equals(COMMANDS.ADD_EMPLOYEE.getCommand()) && role == Role.ADMIN)
             return PersonalHandler.newUserMain(text,chatId);

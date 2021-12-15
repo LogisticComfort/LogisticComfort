@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,12 +34,15 @@ public class registryController {
 
     private final UserService userService;
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
-    public registryController(UserRepo userRepo, CompanyRepo companyRepo, WarehouseRepo warehouseRepo, UserService userService) {
+    public registryController(UserRepo userRepo, CompanyRepo companyRepo, WarehouseRepo warehouseRepo, UserService userService, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.companyRepo = companyRepo;
         this.warehouseRepo = warehouseRepo;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -67,6 +71,7 @@ public class registryController {
 
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.ADMIN));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
         LOG.info("user save - user{}", user);
         return "redirect:/login";

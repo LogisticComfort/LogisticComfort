@@ -24,17 +24,17 @@
                 <!-- Login Form -->
                 <form th:action="@{/registration}" method="post" th:object="${user}">
 
-                    <div style="color: red" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"/>
-                    <input type="text" id="fullName" class="fadeIn second" th:field="*{fullName}" placeholder="username">
-
                     <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"/>
-                    <input type="text" id="login" class="fadeIn second" th:field="*{username}" placeholder="login">
-
-                    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"/>
-                    <input type="text" id="email" class="fadeIn third" th:field="*{email}" placeholder="email">
+                    <input type="text" id="login" class="fadeIn second" th:field="*{username}" placeholder="username">
 
                     <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/>
                     <input type="text" id="password" class="fadeIn fourth" th:field="*{password}" placeholder="password">
+
+                    <div style="color: red" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"/>
+                    <input type="text" id="fullName" class="fadeIn second" th:field="*{fullName}" placeholder="Full name">
+
+                    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"/>
+                    <input type="text" id="email" class="fadeIn third" th:field="*{email}" placeholder="email">
 
                     <input type="submit" class="fadeIn fifth" value="Log In">
                 </form>

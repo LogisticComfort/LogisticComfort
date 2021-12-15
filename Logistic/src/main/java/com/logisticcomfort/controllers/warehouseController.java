@@ -40,6 +40,8 @@ public class warehouseController {
 
     @GetMapping()
     public String warehousesPage(@AuthenticationPrincipal User user, Model model){
+        if (!user.getCompany().isActive())
+            return "redirect:/";
         model.addAttribute("warehouses", userService.findAllWarehousesByUser(user));
         model.addAttribute("company", userService.findCompanyByUser(user));
 
@@ -55,6 +57,8 @@ public class warehouseController {
 
     @GetMapping("/{id}")
     public String Show (@PathVariable("id") long id, Model model, @AuthenticationPrincipal User user){
+        if (!user.getCompany().isActive())
+            return "redirect:/";
 
         if ((user.getWarehouse() == null || user.getWarehouse().getId() != id) && user.getRole() != Role.ADMIN )
             return "redirect:/warehouses";
@@ -96,10 +100,12 @@ public class warehouseController {
         return "redirect:/warehouses/" + String.valueOf(warehouseId);
     }
 
-        @GetMapping("/ware_delete/{id}")
+    @GetMapping("/ware_delete/{id}")
     public String deleteWarehouse(@PathVariable(value = "id", required = false) long id,
                                   @AuthenticationPrincipal User user, Model model) {
 
+        if (!user.getCompany().isActive())
+            return "redirect:/";
         LOG_WH_CONTROL.info("User Role - Role{}", user.getRole());
         if (user.getRole() != Role.ADMIN) {
             return "redirect:/warehouses/";

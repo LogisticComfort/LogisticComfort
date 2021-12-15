@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -81,17 +82,19 @@ public class UserService implements UserDetailsService {
     public void deleteEmployee(long id) throws Exception {
         var user = findUserById(id);
         LOG_USER_SERVICE.info("user info - user{}", user);
-        int numberUsers = user.getWarehouse().getUsers().size();
+        var numberUsers = user.getCompany().getAuthor().size();
         LOG_USER_SERVICE.info("User Role - Role{}", user.getRole());
-        LOG_USER_SERVICE.info("Warehouse is empty? - warehouse{}", user.getWarehouse());
-        if ((user.getRole() == Role.ADMIN) || (user.getWarehouse() == null)) {
-            if (numberUsers <= 1) {
-                throw new Exception("You only have one employee left.");
-            } else {
+        LOG_USER_SERVICE.info("Company is empty? - company{}", user.getCompany());
+        var set  = (HashSet<User>)userRepo.findAllByCompanyOrderByIdAsc(user.getCompany());
+        var count = 0;
+        for (var member: set) {
+            if (member.getRole().equals(Role.ADMIN))
+                count++;
+        }
+        if (user.getRole() == Role.ADMIN && count > 1) {
                 userRepo.deleteById(id);
-            }
         } else {
-            userRepo.deleteById(id);
+            throw new Exception("You only have one employee left.");
         }
     }
 
@@ -102,4 +105,6 @@ public class UserService implements UserDetailsService {
         userUpdate.setPassword(userInfo.getPassword());
         userUpdate.setEmail(userInfo.getEmail());
     }
+
+
 }

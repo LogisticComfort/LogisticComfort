@@ -75,9 +75,7 @@ public class ProductService {
         return applyProductRepo.findAllByCompanyOrderByIdDesc(company);
     }
 
-    public void deleteProduct(long id)  {
-
-        try {
+    public void deleteProduct(long id) throws Exception {
             var product = findById(id);
             LOG_PROD_SERVICE.info("Delete Product - product{}", product);
             if(product.getAmount() == 0){
@@ -85,11 +83,11 @@ public class ProductService {
                 productRepo.save(product);
                 productRepo.delete(product);
                 return;
+            } else {
+                throw new Exception();
+//                LOG_PROD_SERVICE.info("Количество продукции не равно 0", product);
             }
 
-        } catch (Exception e) {
-            LOG_PROD_SERVICE.error("Количество продукции не равно 0", e);
-        }
     }
 
     public void addProductInApply(Product product, Warehouse warehouse, Company company){
