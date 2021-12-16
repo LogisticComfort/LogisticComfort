@@ -1,5 +1,6 @@
 package com.logisticcomfort.controllers;
 
+import com.logisticcomfort.configuration.WebSecurityConfig;
 import com.logisticcomfort.model.Role;
 import com.logisticcomfort.model.User;
 import com.logisticcomfort.model.Warehouse;
@@ -31,19 +32,19 @@ public class StaffController {
     private final WarehouseService warehouseService;
     private final WarehouseRepo warehouseRepo;
     private final UserRepo userRepo;
-    private final PasswordEncoder passwordEncoder;
+    private final WebSecurityConfig config;
 
     private  Model modelPublic;
 
     @Autowired
     public StaffController(UserService userService, WarehouseService warehouseService,
                            WarehouseRepo warehouseRepo, UserRepo userRepo,
-                           PasswordEncoder passwordEncoder) {
+                           WebSecurityConfig config) {
         this.userService = userService;
         this.warehouseService = warehouseService;
         this.warehouseRepo = warehouseRepo;
         this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
+        this.config = config;
     }
 
     @GetMapping()
@@ -99,7 +100,7 @@ public class StaffController {
             user.setWarehouse(warehouseRepo.findById((long)warehouseId));
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(config.getPasswordEncoder().encode(user.getPassword()));
         userRepo.saveAndFlush(user);
         LOG_STAFF.info("user save - user{}", user);
         return "redirect:/staff";
@@ -186,7 +187,7 @@ public class StaffController {
         LOG_STAFF.info("user INFO - user{}", userInfo);
         var userUpdate = userService.findUserById(id);
         LOG_STAFF.info("user INFO - user{}", userUpdate);
-        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+        userInfo.setPassword(config.getPasswordEncoder().encode(userInfo.getPassword()));
         userService.updateEmployee(userUpdate, userInfo);
         userRepo.save(userUpdate);
         return "redirect:/staff/";

@@ -1,5 +1,6 @@
 package com.logisticcomfort.controllers;
 
+import com.logisticcomfort.configuration.WebSecurityConfig;
 import com.logisticcomfort.model.Role;
 import com.logisticcomfort.model.User;
 import com.logisticcomfort.repos.CompanyRepo;
@@ -34,15 +35,15 @@ public class registryController {
 
     private final UserService userService;
 
-    private PasswordEncoder passwordEncoder;
+    private WebSecurityConfig config;
 
     @Autowired
-    public registryController(UserRepo userRepo, CompanyRepo companyRepo, WarehouseRepo warehouseRepo, UserService userService, PasswordEncoder passwordEncoder) {
+    public registryController(UserRepo userRepo, CompanyRepo companyRepo, WarehouseRepo warehouseRepo, UserService userService, WebSecurityConfig config) {
         this.userRepo = userRepo;
         this.companyRepo = companyRepo;
         this.warehouseRepo = warehouseRepo;
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
+        this.config = config;
     }
 
 
@@ -71,7 +72,7 @@ public class registryController {
 
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.ADMIN));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(config.getPasswordEncoder().encode(user.getPassword()));
         userRepo.save(user);
         LOG.info("user save - user{}", user);
         return "redirect:/login";

@@ -30,7 +30,6 @@ public class createController {
     private final ProductService productRepo;
     private final UserService userService;
     private final WarehouseService warehouseService;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public createController(CompanyRepo companyRepo,
@@ -39,8 +38,7 @@ public class createController {
                             ProductService productService,
                             ProductService productRepo,
                             UserService userService,
-                            WarehouseService warehouseService,
-                            PasswordEncoder passwordEncoder) {
+                            WarehouseService warehouseService) {
         this.companyRepo = companyRepo;
         this.userRepo = userRepo;
         this.warehouseRepo = warehouseRepo;
@@ -48,7 +46,6 @@ public class createController {
         this.productRepo = productRepo;
         this.userService = userService;
         this.warehouseService = warehouseService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/company")
