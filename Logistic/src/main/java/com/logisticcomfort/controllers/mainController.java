@@ -6,7 +6,6 @@ import com.logisticcomfort.model.User;
 import com.logisticcomfort.repos.CompanyRepo;
 import com.logisticcomfort.service.CompanyService;
 import com.logisticcomfort.service.UserService;
-import org.apache.catalina.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,7 @@ public class mainController {
         LOG_MAIN_CONTROLLER.info("update companyGet - company{}", company);
 
         model.addAttribute("companyUpdate", company);
-        return "create/update_company";
+        return "update/update_company";
     }
 
     @PostMapping("/update_company/{id}")
@@ -70,6 +69,9 @@ public class mainController {
         if (user.getRole() != Role.ADMIN) {
             return "redirect:/";
         }
+
+        if (bindingResult.hasErrors())
+            return "update/update_company";
 
         LOG_MAIN_CONTROLLER.info("update companyPost - company{}", company);
 

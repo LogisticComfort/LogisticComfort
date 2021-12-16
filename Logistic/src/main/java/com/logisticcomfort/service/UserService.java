@@ -97,7 +97,7 @@ public class UserService implements UserDetailsService {
             if (member.getRole().equals(Role.ADMIN))
                 count++;
         }
-        if (count > 1 || user.getRole().equals(Role.USER)) {
+        if (count > 1 && user.getRole().equals(Role.ADMIN) || user.getRole().equals(Role.USER)) {
                 userRepo.deleteById(id);
         } else {
             throw new Exception("You only have one employee left.");

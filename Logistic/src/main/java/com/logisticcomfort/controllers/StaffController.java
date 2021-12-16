@@ -3,7 +3,6 @@ package com.logisticcomfort.controllers;
 import com.logisticcomfort.configuration.WebSecurityConfig;
 import com.logisticcomfort.model.Role;
 import com.logisticcomfort.model.User;
-import com.logisticcomfort.model.Warehouse;
 import com.logisticcomfort.repos.UserRepo;
 import com.logisticcomfort.repos.WarehouseRepo;
 import com.logisticcomfort.service.UserService;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -184,7 +182,7 @@ public class StaffController {
         var userInfo = userService.findUserById(id);
         LOG_STAFF.info("user INFO - user{}", userInfo);
         model.addAttribute("empUpdate", userInfo);
-        return "update_employee";
+        return "update/update_employee";
     }
 
     @PostMapping("/update_employee/{id}")
@@ -196,6 +194,9 @@ public class StaffController {
         if (user.getRole() != Role.ADMIN) {
             return "redirect:/warehouses/";
         }
+
+        if (bindingResult.hasErrors())
+            return "update/update_employee";
 
         LOG_STAFF.info("user INFO - user{}", userInfo);
         var userUpdate = userService.findUserById(id);

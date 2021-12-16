@@ -14,6 +14,7 @@ import java.util.Set;
 public class WarehouseService {
 
     private static final Logger LOG_WH_SERVICE = LoggerFactory.getLogger(WarehouseService.class.getName());
+
     @Autowired
     private WarehouseRepo warehouseRepo;
 
@@ -37,11 +38,13 @@ public class WarehouseService {
         var warehouse = warehouseRepo.findById(id);
         if (warehouse.getProducts().size() != 0) {
             try {
-                throw new Exception("Склад не пустой");
+                throw new Exception("Склад не пустой(Есть товары или персонал)");
             } catch (Exception e) {
-                LOG_WH_SERVICE.error("Склад не пустой", e);
+                LOG_WH_SERVICE.error("Склад не пустой(Есть товары или персонал)", e);
             }
         }
+        warehouse.setCompany(null);
+        warehouseRepo.save(warehouse);
         warehouseRepo.deleteById(id);
     }
 

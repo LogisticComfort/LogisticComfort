@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -128,18 +129,22 @@ public class warehouseController {
         var warehouse = warehouseService.findWarehouseById(id);
         LOG_WH_CONTROL.info("warehouse Info - warehouse{}", warehouse);
         model.addAttribute("wareUpdate", warehouse);
-        return "update_ware";
+        return "update/update_ware";
     }
 
     @PostMapping("/update_ware/{id}")
     public String updateWare(@PathVariable(value = "id", required = false) long id,
                              @ModelAttribute("wareUpdate") @Valid Warehouse wareInfo,
-                             @AuthenticationPrincipal User user) {
+                             @AuthenticationPrincipal User user,
+                             BindingResult bindingResult) {
 
         LOG_WH_CONTROL.info("User Role - Role{}", user.getRole());
         if (user.getRole() != Role.ADMIN) {
             return "redirect:/warehouses/";
         }
+
+        if (bindingResult.hasErrors())
+            return "update/update_ware";
 
         LOG_WH_CONTROL.info("warehouse Info - warehouse{}", wareInfo);
 
