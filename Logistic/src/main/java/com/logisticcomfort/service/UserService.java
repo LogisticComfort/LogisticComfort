@@ -105,8 +105,6 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateEmployee(User userUpdate, User userInfo) {
-        userUpdate.setId(userInfo.getId());
-        userUpdate.setUsername(userInfo.getUsername());
         userUpdate.setFullName(userInfo.getFullName());
         userUpdate.setPassword(userInfo.getPassword());
         userUpdate.setEmail(userInfo.getEmail());
