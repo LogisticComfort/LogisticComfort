@@ -34,15 +34,10 @@ public class WarehouseService {
         return warehouseRepo.findById(id);
     }
 
-    public void deleteWarehouse(long id) {
+    public void deleteWarehouse(long id) throws Exception {
         var warehouse = warehouseRepo.findById(id);
         if (warehouse.getProducts().size() != 0) {
-            try {
-                throw new Exception("Склад не пустой(Есть товары или персонал)");
-            } catch (Exception e) {
-                LOG_WH_SERVICE.error("Склад не пустой(Есть товары или персонал)", e);
-            }
-            return;
+            throw new Exception("Склад не пустой(Есть товары или персонал)");
         }
         warehouse.setCompany(null);
         warehouseRepo.save(warehouse);
