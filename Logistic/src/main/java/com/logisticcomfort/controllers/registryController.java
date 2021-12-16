@@ -73,6 +73,7 @@ public class registryController {
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.ADMIN));
         user.setPassword(config.getPasswordEncoder().encode(user.getPassword()));
+        user.setProgrammer(user.getUsername().equals("Admin"));
         userRepo.save(user);
         LOG.info("user save - user{}", user);
         return "redirect:/login";

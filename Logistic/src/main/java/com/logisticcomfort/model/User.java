@@ -172,7 +172,7 @@ public class User implements UserDetails {
     }
 
     public void setProgrammer(boolean programmer) {
-        this.programmer = false;
+        this.programmer = programmer;
     }
 
     @Override
