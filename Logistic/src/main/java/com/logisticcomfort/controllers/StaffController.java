@@ -57,11 +57,52 @@ public class StaffController {
         model.addAttribute("warehouses", warehouseService.findAllWarehousesByCompany(company));
         try {
             model.addAttribute("errorNotNull", modelPublic.getAttribute("errorNotNull"));
-            modelPublic = null;
         }catch (Exception exception){
             System.out.println("can not find errorNotNull attribute");
         }
+
+        try {
+            model.addAttribute("employeeLikeThis", modelPublic.getAttribute("employeeLikeThis"));
+        }catch (Exception exception){
+            System.out.println("can not find employeeLikeThis attribute");
+        }
+
+        modelPublic = null;
         return "staff/staff_panel";
+    }
+
+    @PostMapping("/create")
+    public String CreateEmployee(@ModelAttribute("employee") @Valid User user,
+                                 BindingResult bindingResult,
+                                 @ModelAttribute("warehouseForEmployee") @Valid Long warehouseId,
+                                 Model model,
+                                 @AuthenticationPrincipal User userAuth){
+
+        if(bindingResult.hasErrors()) {
+            LOG_STAFF.error("CreateEmployee ERROR");
+            return "redirect:/staff";
+        }
+
+        if(userAuth.getRole() != Role.ADMIN) {
+            LOG_STAFF.info("User Role - Role{}", user.getRole());
+            return "redirect:/";
+        }
+
+        if(!userService.usersWithThisUsername(user.getUsername())) {
+            modelPublic = model.addAttribute("employeeLikeThis", true);
+            return "redirect:/staff";
+        }
+        user.setActive(true);
+        user.setCompany(userService.getCompany(userAuth));
+
+        if(warehouseId != null && warehouseId >= 0){
+            user.setWarehouse(warehouseRepo.findById((long)warehouseId));
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepo.saveAndFlush(user);
+        LOG_STAFF.info("user save - user{}", user);
+        return "redirect:/staff";
     }
 
     @GetMapping("/show_employee/{id}")

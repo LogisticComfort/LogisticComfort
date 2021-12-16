@@ -50,8 +50,14 @@ public class UserService implements UserDetailsService {
         return companyRepo.findById((long)user.getCompany().getId());
     }
 
-    public Set<Warehouse> findAllWarehousesByUser(User user){
+    public Set<Warehouse> findAllWarehousesByAdmin(User user){
         return warehouseRepo.findAllByCompany(findCompanyByUser(user));
+    }
+
+    public Set<Warehouse> findAllWarehousesByUser(User user){
+        HashSet<Warehouse> hashSet = new HashSet<>();
+        hashSet.add(user.getWarehouse());
+        return hashSet;
     }
 
     public Set<User> findAllByCompanyOrderByIdAsc(User user){

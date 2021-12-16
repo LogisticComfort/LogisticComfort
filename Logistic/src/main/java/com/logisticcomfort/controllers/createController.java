@@ -152,37 +152,4 @@ public class createController {
         LOG_CREATE.info("INFO about addProductProd - company{}", companyRepo.findById((long)user.getCompany().getId()));
         return "redirect:/warehouses/" + String.valueOf(id);
     }
-
-    @PostMapping("/employee")
-    public String CreateEmployee(@ModelAttribute("employee") @Valid User user,
-                                 BindingResult bindingResult,
-                                 @ModelAttribute("warehouseForEmployee") @Valid Long warehouseId,
-                                 Model model,
-                                 @AuthenticationPrincipal User userAuth){
-
-        if(bindingResult.hasErrors()) {
-            LOG_CREATE.error("CreateEmployee ERROR");
-            return "redirect:/staff";
-        }
-
-        if(userAuth.getRole() != Role.ADMIN) {
-            LOG_CREATE.info("User Role - Role{}", user.getRole());
-            return "redirect:/";
-        }
-
-        if(!userService.usersWithThisUsername(user.getUsername()))
-            return "redirect:/staff";
-
-        user.setActive(true);
-        user.setCompany(userService.getCompany(userAuth));
-
-        if(warehouseId != null && warehouseId >= 0){
-            user.setWarehouse(warehouseRepo.findById((long)warehouseId));
-        }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepo.saveAndFlush(user);
-        LOG_CREATE.info("user save - user{}", user);
-        return "redirect:/staff";
-    }
 }

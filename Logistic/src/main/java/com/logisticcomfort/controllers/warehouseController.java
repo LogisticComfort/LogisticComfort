@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -42,7 +41,9 @@ public class warehouseController {
     public String warehousesPage(@AuthenticationPrincipal User user, Model model){
         if (!user.getCompany().isActive())
             return "redirect:/";
-        model.addAttribute("warehouses", userService.findAllWarehousesByUser(user));
+
+        var warehouse = user.getRole() == Role.ADMIN ? userService.findAllWarehousesByAdmin(user) : userService.findAllWarehousesByUser(user);
+        model.addAttribute("warehouses", warehouse);
         model.addAttribute("company", userService.findCompanyByUser(user));
 
         try {

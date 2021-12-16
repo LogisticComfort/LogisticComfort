@@ -56,7 +56,12 @@
                     <h3>Add Employee</h3>
                     <div class="row">
                         <div class="col-md-6">
-                            <form method="post" th:action="@{/create/employee}" th:object="${employee}">
+                            <form method="post" th:action="@{/staff/create}" th:object="${employee}">
+
+                                <div style="color: red; font-size: 30px;" th:if="${employeeLikeThis}">
+                                    Пользователь с таким Login уже есть
+                                </div>
+
                                 <div class="form-group">
                                     <div style="color: red" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"/>
                                     <label for="fullName" class="form-label">ФИО работника</label>
@@ -135,7 +140,7 @@
                                 </a></td>
                             </tr>
                         </div>
-                        <div style="color: #051841; font-size: 30px;" th:if="${errorNotNull}">
+                        <div style="color: red; font-size: 30px;" th:if="${errorNotNull}">
                             Нельзя удалить администратора, если он один
                         </div>
                     </table>
