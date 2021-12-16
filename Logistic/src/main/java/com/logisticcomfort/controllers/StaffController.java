@@ -116,6 +116,14 @@ public class StaffController {
         model.addAttribute("warehouses", warehouseService.findAllWarehousesByCompany(company));
         model.addAttribute("employee", userService.findUserById(id));
 
+        try {
+            model.addAttribute("employeeIsTheLastAdmin", modelPublic.getAttribute("employeeIsTheLastAdmin"));
+        }catch (Exception exception){
+            System.out.println("can not find employeeLikeThis attribute");
+        }
+
+        modelPublic = null;
+
         return "staff/show_employee";
     }
 
@@ -128,7 +136,12 @@ public class StaffController {
 
         var user = userService.findUserById(id);
         LOG_STAFF.info("user INFO - user{}", user);
-        user.editRole(role);
+
+        if (!userService.userIsTheLastAdmin(user))
+            user.editRole(role);
+        else {
+            modelPublic = model.addAttribute("employeeIsTheLastAdmin", true);
+        }
         LOG_STAFF.info("warehouseId is - warehouseId{}", warehouseId);
         if(warehouseId != null && warehouseId >= 0){
             user.setWarehouse(warehouseRepo.findById((long)warehouseId));

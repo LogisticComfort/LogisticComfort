@@ -76,6 +76,9 @@
 
             <div class="row">
                 <div class="col-xs-12">
+                    <div style="color: red; font-size: 30px;" th:if="${employeeIsTheLastAdmin}">
+                        Этот пользователь последний Admin
+                    </div>
                     <form method="post" th:action="@{/staff/edit/employee/{id}(id=${employee.getId()})}">
                         <div class="form-group">
                             <label for="roles" class="form-label">Изменить роль</label>

@@ -112,5 +112,14 @@ public class UserService implements UserDetailsService {
         userUpdate.setEmail(userInfo.getEmail());
     }
 
+    public boolean userIsTheLastAdmin(User user){
+        var set  = (HashSet<User>)userRepo.findAllByCompanyOrderByIdAsc(user.getCompany());
+        var count = 0;
+        for (var member: set) {
+            if (member.getRole().equals(Role.ADMIN))
+                count++;
+        }
 
+        return count <= 1;
+    }
 }

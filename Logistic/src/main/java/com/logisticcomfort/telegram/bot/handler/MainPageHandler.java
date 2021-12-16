@@ -52,8 +52,6 @@ public class MainPageHandler {
         switch (user.getRole()){
             case ADMIN:
                 return Buttons.buttonsForAdmin();
-            case WORKER_WAREHOUSE:
-                return Buttons.buttonsForWorkerWarehouse();
             default:
                 return Buttons.buttonsForUser();
         }

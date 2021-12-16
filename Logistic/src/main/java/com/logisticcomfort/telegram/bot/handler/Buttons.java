@@ -49,30 +49,6 @@ public class Buttons {
         return sendMessage;
     }
 
-    public static SendMessage buttonsForWorkerWarehouse(){
-        var sendMessage = new SendMessage();
-
-        var firstKeyboardRow = new KeyboardRow();
-        firstKeyboardRow.addAll(List.of(
-                COMMANDS.WAREHOUSES.getCommand()
-        ));
-
-        var secondKeyboardRow = new KeyboardRow();
-        secondKeyboardRow.addAll(List.of(
-                COMMANDS.ADD_PRODUCT.getCommand(),
-                COMMANDS.SIGN_OUT.getCommand()
-        ));
-
-        var replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        replyKeyboardMarkup.setKeyboard(List.of(
-                firstKeyboardRow,
-                secondKeyboardRow
-        ));
-
-        sendMessage.setReplyMarkup(replyKeyboardMarkup);
-        return sendMessage;
-    }
-
     public static SendMessage buttonsForUser(){
         var sendMessage = new SendMessage();
 
