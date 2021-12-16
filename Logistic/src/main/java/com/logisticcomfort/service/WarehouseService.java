@@ -42,6 +42,7 @@ public class WarehouseService {
             } catch (Exception e) {
                 LOG_WH_SERVICE.error("Склад не пустой(Есть товары или персонал)", e);
             }
+            return;
         }
         warehouse.setCompany(null);
         warehouseRepo.save(warehouse);
