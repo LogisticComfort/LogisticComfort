@@ -191,12 +191,10 @@ public class StaffController {
                              BindingResult bindingResult,
                              @AuthenticationPrincipal User user) {
         LOG_STAFF.info("user ROLE - Role{}", user.getRole());
+
         if (user.getRole() != Role.ADMIN) {
             return "redirect:/warehouses/";
         }
-
-        if (bindingResult.hasErrors())
-            return "update/update_employee";
 
         LOG_STAFF.info("user INFO - user{}", userInfo);
         var userUpdate = userService.findUserById(id);
